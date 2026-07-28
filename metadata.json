@@ -1,0 +1,9 @@
+{
+  "name": "mboaTalk",
+  "description": "Application sécurisée mboaTalk de communication, d'actualités chiffrées et de transfert d'argent, avec authentification biométrique et portefeuille intégré.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
