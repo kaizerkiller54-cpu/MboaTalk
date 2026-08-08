@@ -1,96 +1,54 @@
-# mboaTalk — Messagerie sécurisée & transferts d'argent
+# mboaTalk 🇨🇲 🇨🇬 🇨🇩 🇨🇮 🇸🇳 🇫🇷
 
-**mboaTalk** est une application web moderne tout-en-un combinant messagerie instantanée chiffrée de bout en bout et transferts d'argent simulés. Interface inspirée de WhatsApp / Telegram avec design glassmorphism, thème clair/sombre et support bilingue français/anglais.
+Une application web moderne de messagerie chiffrée de bout en bout et de transferts d'argent rapides (simulée avec code d'activation SMS).
 
-## ✨ Fonctionnalités
+## 🚀 Comment lancer l'application en local ?
 
-- **Authentification par email + mot de passe** — Inscription et connexion sécurisées
-- **Messagerie instantanée** — Discussions privées avec messages texte, images, vidéos, GIFs, documents et messages vocaux
-- **Chiffrement de bout en bout** — Badge visuel sur toutes les conversations
-- **Groupes & salons d'appels** — Création de groupes, publications sociales, invitations, notifications
-- **Portefeuille & transferts** — Simulation de transferts d'argent, historique des transactions, programme de parrainage
-- **Appels audio/vidéo** — Interface d'appel simulée avec réactions en direct
-- **Actualités & statuts 24h** — Publication de statuts éphémères texte/image/vidéo/GIF/document
-- **Chaînes de diffusion** — Création et abonnement à des chaînes d'actualité
-- **Bilingue FR/EN** — Sélecteur de langue dans l'interface
-- **Thème clair/sombre** — Bascule en un clic
-- **Générateur de mots de passe sécurisés** — 24 caractères, 5 jeux de caractères, CSPRNG
-- **Design adaptatif** — Desktop (split-panel) et mobile (stacked)
+L'erreur que vous rencontrez :
+> `'vite' n'est pas reconnu en tant que commande interne ou externe...`
 
-## 🛠️ Stack technique
+est due au fait que **les dépendances de l'application (comme Vite) ne sont pas encore installées** dans votre dossier local. Avant de charger le serveur de développement, Node.js a besoin de télécharger et d'installer l'ensemble des modules requis dans le répertoire `node_modules`.
 
-| Couche | Technologie |
-|--------|-------------|
-| Frontend | React 19 + TypeScript + Vite |
-| Animation | Motion (ex Framer Motion) |
-| Icônes | Lucide React |
-| Design | Tailwind CSS, Glassmorphism, dégradés |
-| Backend | Node.js + Express + TypeScript |
-| Base de données | Fichier JSON local (`server/data/`) |
-| i18n | Système maison via React Context (~250 clés par langue) |
+Voici la marche à suivre pas-à-pas pour démarrer votre application en local :
 
-## 🚀 Installation & démarrage
+### Prérequis
+Avoir installé **Node.js** (recommandé : Version 18 ou supérieure) sur votre machine. Vous pouvez le télécharger sur [nodejs.org](https://nodejs.org/).
 
+### Étape 1 : Ouvrir votre terminal
+Ouvrez votre terminal (Invite de commandes, PowerShell ou Bash) et déplacez-vous à la racine du dossier de votre projet :
 ```bash
-# 1. Cloner le dépôt
-git clone <votre-repo>
-cd mboatalk
+cd chemin/vers/votre/projet/mboaTalk
+```
 
-# 2. Installer les dépendances
+### Étape 2 : Installer les dépendances (Crucial)
+Exécutez la commande suivante pour télécharger et configurer automatiquement tous les modules nécessaires (notamment `vite`, `react`, `lucide-react`, etc.) :
+```bash
 npm install
+```
+*Cette commande va créer un dossier `node_modules` et y installer les bibliothèques indispensables.*
 
-# 3. Lancer le backend (port 5000)
-npm run server
-
-# 4. Dans un autre terminal, lancer le frontend (port 3000)
+### Étape 3 : Lancer le serveur de développement local
+Une fois l'installation terminée avec succès, vous pouvez maintenant démarrer l'application avec la commande :
+```bash
 npm run dev
 ```
 
-Ou utilisez le script automatisé : `demarrer.bat` (Windows).
+### Étape 4 : Ouvrir l'application dans votre navigateur
+Le terminal affichera un lien. Ouvrez votre navigateur Web et accédez à :
+👉 [http://localhost:3000](http://localhost:3000)
 
-## 📦 Scripts disponibles
+---
 
-| Commande | Description |
-|----------|-------------|
-| `npm run dev` | Lance le frontend en mode développement (port 3000) |
-| `npm run server` | Lance le backend Express (port 5000) |
-| `npm run build` | Compile l'application pour la production |
-| `npm run lint` | Vérifie le code avec TypeScript/ESLint |
-| `npm run clean` | Supprime les fichiers de build |
+## 🛠️ Contenu des Scripts Disponibles
 
-## 🔐 Notes de sécurité
+Dans le fichier `package.json`, plusieurs commandes utiles sont programmées :
+- `npm run dev` : Démarre l'application en mode développement local sur le port `3000`.
+- `npm run build` : Compile les fichiers pour la mise en production (minimisation du CSS/JS) dans un dossier `dist/`.
+- `npm run lint` : Analyse de type avec TypeScript pour s'assurer qu'il n'y a pas d'erreur de programmation solide.
+- `npm run clean` : Nettoie les fichiers de build générés temporairement.
 
-- Les mots de passe sont générés côté client avec `crypto.getRandomValues`
-- Le chiffrement est visuellement indiqué dans l'interface (badge "Chiffré de bout en bout")
-- L'accès au portefeuille est protégé par un code PIN à 4 chiffres
-- Aucune donnée sensible n'est exposée via l'API
+---
 
-## 🌍 Internationalisation
-
-Le système de traduction se trouve dans `src/i18n/translations.ts`. Deux langues sont supportées :
-- **Français** (`fr`) — langue par défaut
-- **Anglais** (`en`)
-
-Pour basculer : bouton `FR`/`EN` dans l'écran de connexion ou dans la barre latérale.
-
-## 📁 Structure du projet
-
-```
-mboatalk/
-├── src/
-│   ├── components/       # Composants React (tabs, modaux, etc.)
-│   ├── i18n/             # Traductions FR/EN et contexte React
-│   ├── services/         # API client (appels backend)
-│   ├── types.ts          # Types TypeScript
-│   ├── data.ts           # Données initiales
-│   ├── App.tsx           # Composant principal
-│   └── main.tsx          # Point d'entrée
-├── server/
-│   ├── server.ts         # Serveur Express
-│   └── db.ts             # Base de données JSON
-├── public/
-├── dist/                 # Build de production
-├── demarrer.bat          # Lancement one-click (Windows)
-├── arreter.bat           # Arrêt des processus
-└── rebuild.bat           # Réinstallation complète
-```
+## 🔐 Sécurité de l'accès (Mode d'utilisation local)
+1. **Connexion par Téléphone & SMS** : L'activation initiale s'effectue par l'envoi d'un mot de passe à usage unique (OTP). Un faux SMS de notification va simuler la réception réseau de l'opérateur Telecom. Vous pouvez cliquer sur la notification SMS pour le pré-remplir ou entrer le code affiché.
+2. **Transferts de fonds** : Rendez-vous sur l'onglet **Portefeuille** pour simuler un envoi direct d'argent à un contact ou générer des liens de facturation.

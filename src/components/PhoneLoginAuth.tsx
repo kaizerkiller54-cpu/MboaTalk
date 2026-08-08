@@ -30,11 +30,12 @@ function generatePassword(): string {
   for (let i = pwd.length; i < 20; i++) pwd += pick(all);
 
   // Shuffle (Fisher-Yates)
-  for (let i = pwd.length - 1; i > 0; i--) {
+  const arr = pwd.split('');
+  for (let i = arr.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-    [pwd[i], pwd[j]] = [pwd[j], pwd[i]];
+    [arr[i], arr[j]] = [arr[j], arr[i]];
   }
-  return pwd;
+  return arr.join('');
 }
 
 const featureIcons = [MessageSquare, Zap, Globe] as const;

@@ -11,6 +11,7 @@ import {
 } from './data';
 import { Contact, Story, Channel, Group, GroupInvitation, Notification, Chat, Transaction } from './types';
 import { api } from './services/api';
+import { tokenStore } from './services/client';
 import PhoneLoginAuth from './components/PhoneLoginAuth';
 import PinCodeAuth from './components/PinCodeAuth';
 import CallModal from './components/CallModal';
@@ -80,7 +81,8 @@ export default function App() {
 
   useEffect(() => {
     const savedPhone = localStorage.getItem('securconnect_user_phone');
-    if (savedPhone) {
+    const hasToken = Boolean(tokenStore.getAccess() || tokenStore.getRefresh());
+    if (savedPhone && hasToken) {
       setIsBiometricsVerified(true);
     }
   }, []);
@@ -179,6 +181,7 @@ export default function App() {
   };
 
   const handleLogOut = () => {
+    api.logout();
     localStorage.removeItem('securconnect_user_phone');
     localStorage.removeItem('securconnect_user_email');
     setIsBiometricsVerified(false);
