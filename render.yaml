@@ -1,0 +1,40 @@
+# Blueprint Render — MboaTalk (gratuit, sans carte bancaire)
+# Dashboard Render > New + > Blueprint > sélectionner ce repo
+# Prérequis : créer le projet Neon + récupérer DATABASE_URL
+services:
+  - type: web
+    name: mboatalk
+    runtime: node
+    repo: https://github.com/kaizerkiller54-cpu/MboaTalk.git
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npm run server:new
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_VERSION
+        value: 20
+      - key: PORT
+        value: 10000
+      - key: APP_URL
+        value: https://mboatalk.onrender.com
+      - key: CORS_ORIGIN
+        value: https://mboatalk.onrender.com
+      - key: DATABASE_URL
+        sync: false
+        value: postgresql://CHANGEME
+      - key: JWT_SECRET
+        sync: false
+        value: CHANGE_ME_long_random_access_secret
+      - key: JWT_REFRESH_SECRET
+        sync: false
+        value: CHANGE_ME_long_random_refresh_secret
+      - key: JWT_ACCESS_EXPIRES
+        value: 15m
+      - key: JWT_REFRESH_EXPIRES
+        value: 7d
+      - key: BODY_LIMIT
+        value: 50mb
+      - key: RATE_LIMIT_WINDOW_MS
+        value: 900000
+      - key: RATE_LIMIT_MAX
+        value: 20
