@@ -136,8 +136,8 @@ export default function App() {
           id: `tx_auto_msg_${Date.now()}`,
           senderId: 'me',
           type: 'document' as const,
-          text: `Transfert de ${amount.toFixed(2)} € effectué avec succès !`,
-          fileName: `Reçu_Transfert_${amount.toFixed(0)}€.pdf`,
+          text: `Transfert de ${amount.toFixed(2)} FCFA effectué avec succès !`,
+          fileName: `Reçu_Transfert_${amount.toFixed(0)}FCFA.pdf`,
           fileUrl: '',
           fileSize: '1.2 Kb',
           timestamp: new Date().toISOString()
@@ -147,7 +147,7 @@ export default function App() {
             return {
               ...chat,
               messages: [...chat.messages, newMsg],
-              recentMessage: `Transfert de ${amount.toFixed(2)} € Réussi`,
+              recentMessage: `Transfert de ${amount.toFixed(2)} FCFA Réussi`,
               lastActive: new Date().toISOString()
             };
           }
@@ -273,7 +273,7 @@ export default function App() {
               <div className={`mt-auto p-3 rounded-lg flex items-center justify-between mboa-card ${isLight ? '' : ''}`}>
                 <div>
                   <span className={`text-[9px] uppercase font-bold font-mono block tracking-wider ${isLight ? 'text-gray-500' : 'text-[#8696a0]'}`}>{t('nav_balance')}</span>
-                  <span className="text-sm font-bold text-[#00a884] font-mono">{balance.toFixed(2)} €</span>
+                  <span className="text-sm font-bold text-[#00a884] font-mono">{balance.toFixed(2)} FCFA</span>
                 </div>
                 <div className="w-2 h-2 bg-[#00a884] rounded-full animate-pulse" />
               </div>
@@ -399,7 +399,8 @@ export default function App() {
                       <DiscussionsTab 
                         chats={chats} 
                         setChats={setChats} 
-                        contacts={contacts} 
+                        contacts={contacts}
+                        setContacts={setContacts}
                         groups={groups}
                         stories={stories}
                         setStories={setStories}

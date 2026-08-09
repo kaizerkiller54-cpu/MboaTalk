@@ -24,3 +24,14 @@ export const validateParams = (schema: z.ZodTypeAny) => {
     next();
   };
 };
+
+export const validateQuery = (schema: z.ZodTypeAny) => {
+  return (req: Request, _res: Response, next: NextFunction) => {
+    const result = schema.safeParse(req.query);
+    if (!result.success) {
+      return next(new AppError('Paramètres de requête invalides.', 400));
+    }
+    req.query = result.data as any;
+    next();
+  };
+};

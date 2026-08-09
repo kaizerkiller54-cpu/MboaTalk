@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Fingerprint, ShieldCheck, Cpu, Smartphone, AlertCircle } from 'lucide-react';
+import { Fingerprint, ShieldCheck, Cpu, Smartphone, AlertCircle, User } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import PhoneMoneyLogo from './PhoneMoneyLogo';
 
@@ -142,7 +142,7 @@ export default function BiometricAuth({ onSuccess, userEmail }: BiometricAuthPro
                           animate={{ borderRadius: ["30%", "50%", "30%"] }}
                           transition={{ repeat: Infinity, duration: 1.5 }}
                         />
-                        <span className="text-3xl">👤</span>
+                        <User className="w-10 h-10 text-emerald-400" />
                         {/* Interactive scan light bar */}
                         <motion.div
                           className="absolute left-0 right-0 h-0.5 bg-sky-400 shadow-md shadow-sky-400"
@@ -187,7 +187,7 @@ export default function BiometricAuth({ onSuccess, userEmail }: BiometricAuthPro
                     whileTap={{ scale: 0.95 }}
                   >
                     {isFaceID ? (
-                      <div className="text-4xl mb-2">👤</div>
+                      <User className="w-10 h-10 text-emerald-400" />
                     ) : (
                       <Fingerprint className="w-16 h-16 text-slate-400 mb-2" />
                     )}

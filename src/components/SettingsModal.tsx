@@ -19,7 +19,10 @@ import {
   Camera, 
   ChevronRight,
   Sparkles,
-  Info
+  Info,
+  Sun,
+  Moon,
+  Rocket
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Notification } from '../types';
@@ -47,7 +50,7 @@ export default function SettingsModal({ isOpen, onClose, setNotifications, theme
   // --- Profile States ---
   const [userName, setUserName] = useState(() => localStorage.getItem('securconnect_user_name') || 'Alex Mercer');
   const [userPhone, setUserPhone] = useState(() => localStorage.getItem('securconnect_user_phone') || '+33 6 12 34 56 78');
-  const [userBio, setUserBio] = useState(() => localStorage.getItem('securconnect_user_status') || 'Sécurité d\'abord, rapidité absolue. 🚀');
+  const [userBio, setUserBio] = useState(() => localStorage.getItem('securconnect_user_status') || 'Sécurité d\'abord, rapidité absolue.');
   const [userAvatar, setUserAvatar] = useState(() => localStorage.getItem('securconnect_user_avatar') || AVATARS_POOL[0]);
   const [profileSaved, setProfileSaved] = useState(false);
 
@@ -115,8 +118,8 @@ export default function SettingsModal({ isOpen, onClose, setNotifications, theme
       langTitle: "Langue de l'application",
       themeTitle: "Style du thème",
       themeDesc: "Personnalise le rendu visuel de Pay&Chat (Clair ou Sombre).",
-      themeLight: "Mode Clair ☀️",
-      themeDark: "Mode Sombre 🌙",
+      themeLight: "Mode Clair",
+      themeDark: "Mode Sombre",
       fastBioTitle: "Vitesse de Réception du Code SMS",
       fastBioDesc: "Permet d'accélérer la simulation de la vitesse d'envoi du code SMS d'accès de 1.8s à 0.4s (réseau ultra-rapide).",
       enrollNew: "Vérifier ou configurer la carte SIM",
@@ -147,8 +150,8 @@ export default function SettingsModal({ isOpen, onClose, setNotifications, theme
       langTitle: "Application Language",
       themeTitle: "App Theme Style",
       themeDesc: "Choose between light aesthetic or classic cyberpunk dark.",
-      themeLight: "Light Mode ☀️",
-      themeDark: "Dark Mode 🌙",
+      themeLight: "Light Mode",
+      themeDark: "Dark Mode",
       fastBioTitle: "Simulated SMS Delivery Speed",
       fastBioDesc: "Reduces the simulation SMS transmission waiting time from 1.8 seconds down to 0.4 seconds.",
       enrollNew: "Configure or test secure GSM SIM card",
@@ -176,7 +179,7 @@ export default function SettingsModal({ isOpen, onClose, setNotifications, theme
       setNotifications(prev => [
         {
           id: `notif_profile_${Date.now()}`,
-          title: 'Profil mis à jour 👤',
+          title: 'Profil mis à jour',
           body: `Votre profil a été enregistré avec le nom "${userName}".`,
           timestamp: 'À l\'instant',
           isRead: false,
@@ -210,7 +213,7 @@ export default function SettingsModal({ isOpen, onClose, setNotifications, theme
       setNotifications(prev => [
         {
           id: `notif_sec_${Date.now()}`,
-          title: 'Paramètres métriques modifiés 🔐',
+          title: 'Paramètres métriques modifiés',
           body: `Le code PIN du portefeuille a été configuré avec succès.`,
           timestamp: 'À l\'instant',
           isRead: false,
@@ -266,7 +269,7 @@ export default function SettingsModal({ isOpen, onClose, setNotifications, theme
         setNotifications(prevNotif => [
           {
             id: `notif_bio_${Date.now()}`,
-            title: 'Données Biométriques Enregistrées 👤',
+            title: 'Données Biométriques Enregistrées',
             body: `Un nouveau jeu d'identification rapide (${enrollType}) a été numérisé et stocké dans l'enclave sécurisée du terminal.`,
             timestamp: 'À l\'instant',
             isRead: false,
@@ -463,7 +466,7 @@ export default function SettingsModal({ isOpen, onClose, setNotifications, theme
                   onChange={(e) => setUserBio(e.target.value)}
                   rows={2}
                   className="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-white focus:outline-none focus:ring-1 focus:ring-sky-500 resize-none"
-                  placeholder="Sécurité d'abord, rapidité absolue. 🚀"
+                  placeholder="Sécurité d'abord, rapidité absolue."
                 />
               </div>
 
@@ -545,7 +548,7 @@ export default function SettingsModal({ isOpen, onClose, setNotifications, theme
                       cryptoMode === 'AES_256' ? 'bg-sky-600/10 border-sky-500 text-sky-400' : 'bg-slate-950 border-slate-850 text-slate-400'
                     }`}
                   >
-                    🚀 AES-256 (Standard)
+                    <span className="flex items-center gap-1"><Rocket className="w-3 h-3" /> AES-256 (Standard)</span>
                   </button>
                   <button
                     onClick={() => setCryptoMode('KYBER_1024')}
@@ -553,7 +556,7 @@ export default function SettingsModal({ isOpen, onClose, setNotifications, theme
                       cryptoMode === 'KYBER_1024' ? 'bg-blue-600/10 border-blue-500 text-blue-400' : 'bg-slate-950 border-slate-850 text-slate-400'
                     }`}
                   >
-                    🛡️ Kyber (Post-Quantum)
+                    <span className="flex items-center gap-1"><ShieldCheck className="w-3 h-3" /> Kyber (Post-Quantum)</span>
                   </button>
                 </div>
               </div>

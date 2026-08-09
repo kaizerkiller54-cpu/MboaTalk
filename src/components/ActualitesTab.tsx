@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Camera, Plus, Check, ArrowRight, Rss, Layers, Share2, Award, Calendar, Repeat, Image, Film, FileText, Smile, Upload, FileUp, Lock, ShieldCheck } from 'lucide-react';
+import { Camera, Plus, Check, ArrowRight, Rss, Layers, Share2, Award, Calendar, Repeat, Image, Film, FileText, Smile, Upload, FileUp, Lock, ShieldCheck, Radio, FolderOpen, X, TrendingUp, Settings, Lightbulb, Globe, Zap, Palette, Download, Sparkles, Rocket, Video, MessageCircle, Ghost, Monitor, PartyPopper, CheckCircle2 } from 'lucide-react';
 import { Story, Channel, Contact } from '../types';
 import { motion, AnimatePresence } from 'motion/react';
 import { api } from '../services/api';
@@ -39,7 +39,7 @@ export default function ActualitesTab({ stories, setStories, channels, setChanne
   const [selectedChannelId, setSelectedChannelId] = useState<string>(channels[0]?.id || 'c1');
   const [showCreateChannel, setShowCreateChannel] = useState(false);
   const [newChanName, setNewChanName] = useState('');
-  const [newChanAvatar, setNewChanAvatar] = useState('📡');
+  const [newChanAvatar, setNewChanAvatar] = useState('');
   const [newChanCategory, setNewChanCategory] = useState('Technologie');
   const [newChanDesc, setNewChanDesc] = useState('');
 
@@ -92,7 +92,7 @@ export default function ActualitesTab({ stories, setStories, channels, setChanne
     setSelectedChannelId(newId);
     setShowCreateChannel(false);
     setNewChanName('');
-    setNewChanAvatar('📡');
+    setNewChanAvatar('');
     setNewChanCategory('Technologie');
     setNewChanDesc('');
   };
@@ -154,7 +154,7 @@ export default function ActualitesTab({ stories, setStories, channels, setChanne
       if (!storyText.trim()) return;
     } else {
       if (!mediaUrl) {
-        alert('Veuillez séléctionner un fichier ou choisir un modèle ! 📁');
+        alert('Veuillez séléctionner un fichier ou choisir un modèle !');
         return;
       }
       finalMediaUrl = mediaUrl;
@@ -213,8 +213,8 @@ export default function ActualitesTab({ stories, setStories, channels, setChanne
     event.stopPropagation(); // Avoid triggering standard view story modal
     
     const repostedTextContent = storyToRepost.textContent
-      ? `🔁 Partagé : ${storyToRepost.textContent}`
-      : '🔁 Statut partagé';
+      ? `Partagé : ${storyToRepost.textContent}`
+      : 'Statut partagé';
 
     // Optimistic UI update
     const newStory: Story = {
@@ -244,7 +244,7 @@ export default function ActualitesTab({ stories, setStories, channels, setChanne
       console.error('[ActualitesTab] Erreur lors du repartage:', err);
     }
 
-    alert('Statut repartagé avec succès sur votre profil ! 🔁🎉');
+    alert('Statut repartagé avec succès sur votre profil !');
   };
 
   const toggleFollowChannel = async (channelId: string) => {
@@ -517,9 +517,9 @@ export default function ActualitesTab({ stories, setStories, channels, setChanne
                 <button
                   type="button"
                   onClick={() => setShowCreateChannel(false)}
-                  className="text-slate-400 hover:text-slate-200 text-xs p-1"
+                  className="text-slate-400 hover:text-slate-200 p-1"
                 >
-                  ✕
+                  <X className="w-4 h-4" />
                 </button>
               </div>
 
@@ -531,7 +531,7 @@ export default function ActualitesTab({ stories, setStories, channels, setChanne
                     required
                     value={newChanName}
                     onChange={(e) => setNewChanName(e.target.value)}
-                    placeholder="ex: Bons plans cryptos 📈"
+                    placeholder="ex: Bons plans cryptos"
                     className="w-full bg-slate-900 border border-slate-800 rounded-lg p-2 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-emerald-500/55 text-left h-8"
                   />
                 </div>
@@ -543,7 +543,7 @@ export default function ActualitesTab({ stories, setStories, channels, setChanne
                     maxLength={2}
                     value={newChanAvatar}
                     onChange={(e) => setNewChanAvatar(e.target.value)}
-                    placeholder="📡"
+                    placeholder="https://..."
                     className="w-full bg-slate-900 border border-slate-800 rounded-lg p-2 text-xs text-center text-white focus:outline-none focus:border-emerald-500/55 h-8"
                   />
                 </div>
@@ -653,7 +653,7 @@ export default function ActualitesTab({ stories, setStories, channels, setChanne
           <div className="p-4 bg-slate-900/90 border border-slate-800/80 rounded-2xl space-y-3.5 text-left animate-fade-in mt-2.5">
             <div className="flex justify-between items-center">
               <span className="text-[10px] uppercase font-extrabold text-slate-400 tracking-wider flex items-center gap-1">
-                ⚙️ Paramètres du canal sélectionné
+                <Settings className="w-3 h-3" /> Paramètres du canal sélectionné
               </span>
               <div className="flex items-center gap-1">
                 <span className="text-[10px] text-slate-500 font-mono font-sans">Administrateur:</span>
@@ -737,7 +737,7 @@ export default function ActualitesTab({ stories, setStories, channels, setChanne
                     {isSavedChannelNotice && (
                       <span className="text-emerald-400 text-[10px] font-bold animate-pulse flex items-center gap-1">
                         <Check className="w-3.5 h-3.5" />
-                        Modifications enregistrées sur mboaTalk ! 🔒
+                        Modifications enregistrées sur mboaTalk ! <Lock className="w-3 h-3" />
                       </span>
                     )}
                   </div>
@@ -777,7 +777,7 @@ export default function ActualitesTab({ stories, setStories, channels, setChanne
       {/* Dynamic educational stats for fees inside news */}
       <div className="p-4 bg-slate-900/60 border border-slate-800/80 rounded-2xl flex items-center gap-4">
         <div className="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 text-xl flex-shrink-0">
-          💡
+          <Lightbulb className="w-6 h-6" />
         </div>
         <div className="space-y-1">
           <h4 className="text-xs font-bold font-mono text-emerald-400 uppercase tracking-wider">Actu Frais Réduits</h4>
@@ -808,9 +808,9 @@ export default function ActualitesTab({ stories, setStories, channels, setChanne
                   setFileSize('');
                   setSelectedFile(null);
                 }}
-                className="text-slate-405 hover:text-slate-200 text-xs cursor-pointer p-1"
+                className="text-slate-405 hover:text-slate-200 cursor-pointer p-1"
               >
-                ✕
+                <X className="w-4 h-4" />
               </button>
             </div>
 
@@ -895,7 +895,7 @@ export default function ActualitesTab({ stories, setStories, channels, setChanne
                     {mediaUrl ? (
                       <div className="text-center">
                         <img src={mediaUrl} className="max-h-24 mx-auto rounded border border-slate-800" />
-                        <p className="text-[10px] text-emerald-400 font-semibold mt-1.5 truncate max-w-[200px]">✓ {fileName || "Fichier chargé"}</p>
+                        <p className="text-[10px] text-emerald-400 font-semibold mt-1.5 truncate max-w-[200px] flex items-center justify-center gap-1"><Check className="w-3 h-3" /> {fileName || "Fichier chargé"}</p>
                       </div>
                     ) : (
                       <>
@@ -911,9 +911,9 @@ export default function ActualitesTab({ stories, setStories, channels, setChanne
                     <span className="text-[10px] text-slate-400 font-semibold">Ou choisir un modèle de l'app :</span>
                     <div className="grid grid-cols-3 gap-2">
                       {[
-                        { name: '🌐 Web Cosmic', url: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=400' },
-                        { name: '⚡ Tech Code', url: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=400' },
-                        { name: '🎨 Dégradé', url: 'https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=400' },
+                        { name: 'Web Cosmic', url: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=400' },
+                        { name: 'Tech Code', url: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=400' },
+                        { name: 'Dégradé', url: 'https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=400' },
                       ].map((item) => (
                         <button
                           key={item.url}
@@ -951,7 +951,7 @@ export default function ActualitesTab({ stories, setStories, channels, setChanne
                     {mediaUrl && fileName ? (
                       <div className="text-center w-full">
                         <Film className="w-8 h-8 text-emerald-400 mx-auto" />
-                        <p className="text-[11px] text-emerald-400 font-bold mt-1 max-w-[200px] truncate mx-auto">✓ {fileName}</p>
+                        <p className="text-[11px] text-emerald-400 font-bold mt-1 max-w-[200px] truncate mx-auto flex items-center justify-center gap-1"><Check className="w-3 h-3" /> {fileName}</p>
                         <span className="text-[9px] text-slate-500 font-mono">{fileSize}</span>
                         <div className="mt-1 px-2 py-0.5 bg-emerald-500/10 text-emerald-400 font-mono text-[8px] uppercase inline-block rounded">Prêt à jouer</div>
                       </div>
@@ -969,8 +969,8 @@ export default function ActualitesTab({ stories, setStories, channels, setChanne
                     <span className="text-[10px] text-slate-400 font-semibold">Ou utiliser une animation de synthèse :</span>
                     <div className="grid grid-cols-2 gap-2">
                       {[
-                        { name: '🟢 Design Green Matrix', url: 'https://assets.mixkit.co/videos/preview/mixkit-matrix-style-falling-green-letters-vertical-39745-large.mp4' },
-                        { name: '💜 Cyberpunk Abstract', url: 'https://assets.mixkit.co/videos/preview/mixkit-cyber-punk-futuristic-city-street-with-neon-lights-vertical-40097-large.mp4' },
+                        { name: 'Design Green Matrix', url: 'https://assets.mixkit.co/videos/preview/mixkit-matrix-style-falling-green-letters-vertical-39745-large.mp4' },
+                        { name: 'Cyberpunk Abstract', url: 'https://assets.mixkit.co/videos/preview/mixkit-cyber-punk-futuristic-city-street-with-neon-lights-vertical-40097-large.mp4' },
                       ].map((item) => (
                         <button
                           key={item.url}
@@ -1008,7 +1008,7 @@ export default function ActualitesTab({ stories, setStories, channels, setChanne
                     {mediaUrl ? (
                       <div className="text-center">
                         <img src={mediaUrl} className="max-h-24 mx-auto rounded border border-slate-800" />
-                        <p className="text-[10px] text-emerald-400 font-semibold mt-1.5 truncate max-w-[200px]">✓ {fileName || "GIF importé"}</p>
+                        <p className="text-[10px] text-emerald-400 font-semibold mt-1.5 truncate max-w-[200px] flex items-center justify-center gap-1"><Check className="w-3 h-3" /> {fileName || "GIF importé"}</p>
                       </div>
                     ) : (
                       <>
@@ -1024,9 +1024,9 @@ export default function ActualitesTab({ stories, setStories, channels, setChanne
                     <span className="text-[10px] text-slate-400 font-semibold">Bibliothèque de Gifs populaires :</span>
                     <div className="grid grid-cols-3 gap-1.5">
                       {[
-                        { name: '🎉 Celebration', url: 'https://media.giphy.com/media/3o7qE1YN7aBOFPRw8E/giphy.gif' },
-                        { name: '👾 Cyberwave', url: 'https://media.giphy.com/media/l0HlxO7ArI7ZfA8IE/giphy.gif' },
-                        { name: '💻 Dev Life', url: 'https://media.giphy.com/media/26n6WywJyusf21Ar4/giphy.gif' },
+                        { name: 'Celebration', url: 'https://media.giphy.com/media/3o7qE1YN7aBOFPRw8E/giphy.gif' },
+                        { name: 'Cyberwave', url: 'https://media.giphy.com/media/l0HlxO7ArI7ZfA8IE/giphy.gif' },
+                        { name: 'Dev Life', url: 'https://media.giphy.com/media/26n6WywJyusf21Ar4/giphy.gif' },
                       ].map((item) => (
                         <button
                           key={item.url}
@@ -1064,7 +1064,7 @@ export default function ActualitesTab({ stories, setStories, channels, setChanne
                     {mediaUrl || fileName ? (
                       <div className="text-center w-full">
                         <FileText className="w-8 h-8 text-amber-400 mx-auto" />
-                        <p className="text-[11px] text-amber-400 font-bold mt-1.5 max-w-[200px] truncate mx-auto">✓ {fileName}</p>
+                        <p className="text-[11px] text-amber-400 font-bold mt-1.5 max-w-[200px] truncate mx-auto flex items-center justify-center gap-1"><Check className="w-3 h-3" /> {fileName}</p>
                         <span className="text-[9px] text-slate-500 font-mono block mt-0.5">{fileSize || '10 Kb'}</span>
                         <div className="mt-1 px-2 py-0.5 bg-amber-500/10 text-amber-400 font-mono text-[8px] uppercase inline-block rounded">Document Structuré</div>
                       </div>
@@ -1140,7 +1140,7 @@ export default function ActualitesTab({ stories, setStories, channels, setChanne
                   disabled={statusType === 'text' ? !storyText.trim() : !mediaUrl}
                   className="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-xs font-extrabold text-white shadow-md shadow-emerald-600/20 transition cursor-pointer"
                 >
-                  Publier sur mon statut 🚀
+                  <span className="flex items-center gap-1">Publier sur mon statut <Rocket className="w-3.5 h-3.5" /></span>
                 </button>
               </div>
             </form>
@@ -1176,7 +1176,7 @@ export default function ActualitesTab({ stories, setStories, channels, setChanne
                 onClick={() => setActiveStory(null)}
                 className="w-8 h-8 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center hover:bg-slate-800 cursor-pointer"
               >
-                ✕
+                <X className="w-4 h-4 text-slate-400" />
               </button>
             </div>
 
@@ -1198,15 +1198,15 @@ export default function ActualitesTab({ stories, setStories, channels, setChanne
                   />
                   {activeStory.textContent && (
                     <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent p-5 pt-10 text-left pointer-events-none">
-                      <p className="text-white text-xs font-medium leading-relaxed">🎥 {activeStory.textContent}</p>
+                      <p className="text-white text-xs font-medium leading-relaxed flex items-center gap-1"><Video className="w-3 h-3 shrink-0" /> {activeStory.textContent}</p>
                     </div>
                   )}
                 </div>
               ) : activeStory.mediaType === 'document' ? (
                 <div className="w-full aspect-[3/4] rounded-2xl p-5 bg-slate-900 border border-slate-800 flex flex-col justify-between text-left shadow-xl">
                   <div className="space-y-3">
-                    <div className="w-12 h-12 rounded-2xl bg-emerald-500/15 border border-emerald-500/20 flex items-center justify-center text-emerald-400 text-2xl">
-                      📄
+                    <div className="w-12 h-12 rounded-2xl bg-emerald-500/15 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
+                      <FileText className="w-6 h-6" />
                     </div>
                     <div className="space-y-1.5">
                       <h3 className="font-extrabold text-slate-100 text-xs break-all line-clamp-2">{activeStory.fileName || 'document_partage.pdf'}</h3>
@@ -1215,7 +1215,7 @@ export default function ActualitesTab({ stories, setStories, channels, setChanne
                     </div>
                     {activeStory.textContent && (
                       <p className="text-[11px] text-slate-300 italic bg-slate-950/50 p-2.5 rounded-xl border border-slate-850 leading-relaxed mt-1">
-                        💬 {activeStory.textContent}
+                        <span className="flex items-center gap-1"><MessageCircle className="w-3 h-3 shrink-0" /> {activeStory.textContent}</span>
                       </p>
                     )}
                   </div>
@@ -1231,7 +1231,7 @@ export default function ActualitesTab({ stories, setStories, channels, setChanne
                     }}
                     className="w-full py-2.5 bg-[#00a884] hover:bg-emerald-500 rounded-xl text-center text-[11px] font-bold text-white transition block cursor-pointer"
                   >
-                    Ouvrir & Télécharger le Document 📥
+                    <span className="flex items-center justify-center gap-1">Ouvrir & Télécharger le Document <Download className="w-3.5 h-3.5" /></span>
                   </a>
                 </div>
               ) : (
@@ -1245,11 +1245,11 @@ export default function ActualitesTab({ stories, setStories, channels, setChanne
                   />
                   {activeStory.textContent ? (
                     <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent p-5 pt-10 text-left">
-                      <p className="text-white text-xs font-medium leading-relaxed">✨ {activeStory.textContent}</p>
+                      <p className="text-white text-xs font-medium leading-relaxed flex items-center gap-1"><Sparkles className="w-3 h-3 shrink-0" /> {activeStory.textContent}</p>
                     </div>
                   ) : (
                     <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-transparent to-transparent flex items-end p-5">
-                      <p className="text-white text-xs font-medium">✨ Statut {activeStory.mediaType} partagé</p>
+                      <p className="text-white text-xs font-medium flex items-center gap-1"><Sparkles className="w-3 h-3" /> Statut {activeStory.mediaType} partagé</p>
                     </div>
                   )}
                 </div>
@@ -1269,7 +1269,7 @@ export default function ActualitesTab({ stories, setStories, channels, setChanne
                     className="flex items-center gap-2 px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 rounded-full text-xs font-bold text-white shadow-md cursor-pointer border border-emerald-500 transition-all hover:scale-105"
                   >
                     <Repeat className="w-4 h-4" />
-                    <span>Repartager sur mon profil 🔁</span>
+                    <span className="flex items-center gap-1"><Share2 className="w-3 h-3" /> Repartager sur mon profil</span>
                   </button>
                 )}
               </div>

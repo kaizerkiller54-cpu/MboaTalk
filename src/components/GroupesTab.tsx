@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Users, MailOpen, Compass, Bell, BellOff, Volume2, Plus, MessageSquare, Heart, Video, Phone, Lock, ShieldCheck, Edit3, Settings, Check } from 'lucide-react';
+import { Users, MailOpen, Compass, Bell, BellOff, Volume2, Plus, MessageSquare, Heart, Video, Phone, Lock, ShieldCheck, Edit3, Settings, Check, X, Coffee, AlertTriangle, Wallet, PartyPopper } from 'lucide-react';
 import { Group, GroupInvitation, Notification, GroupPost } from '../types';
 import { motion, AnimatePresence } from 'motion/react';
 import { api } from '../services/api';
@@ -26,7 +26,7 @@ export default function GroupesTab({ groups, setGroups, invitations, setInvitati
       id: 'gp1',
       authorName: 'Alice Dubois',
       authorAvatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150',
-      content: 'Hello l\'équipe ! Avez-vous vu que Pay&Chat permet de faire des transferts quasi gratuits ? 💼 Seulement 0,1% de frais, ça va changer nos cagnottes de groupe ! 🎉',
+      content: 'Hello l\'équipe ! Avez-vous vu que Pay&Chat permet de faire des transferts quasi gratuits ? Seulement 0,1% de frais, ça va changer nos cagnottes de groupe !',
       timestamp: 'Il y a 20 min',
       likes: 4,
       commentsCount: 2
@@ -48,7 +48,7 @@ export default function GroupesTab({ groups, setGroups, invitations, setInvitati
   // Create Group Form states
   const [showCreateGroup, setShowCreateGroup] = useState(false);
   const [newGroupName, setNewGroupName] = useState('');
-  const [newGroupAvatar, setNewGroupAvatar] = useState('👥');
+  const [newGroupAvatar, setNewGroupAvatar] = useState('');
   const [newGroupDescription, setNewGroupDescription] = useState('');
 
   // Selected Group details & Edit state
@@ -113,13 +113,13 @@ export default function GroupesTab({ groups, setGroups, invitations, setInvitati
     setSelectedGroup(tempId);
     setShowCreateGroup(false);
     setNewGroupName('');
-    setNewGroupAvatar('👥');
+    setNewGroupAvatar('');
     setNewGroupDescription('');
 
     // Trigger notification
     const newNotif: Notification = {
       id: `notif_autogen_${Date.now()}`,
-      title: 'Groupe créé avec succès ! 👥',
+      title: 'Groupe créé avec succès !',
       body: `Le groupe "${newGroupName}" a été initialisé. Vous en êtes l'administrateur exclusif.`,
       timestamp: 'A l\'instant',
       isRead: false,
@@ -181,7 +181,7 @@ export default function GroupesTab({ groups, setGroups, invitations, setInvitati
       if (parentInv) {
         const newNotif: Notification = {
           id: `notif_autogen_${Date.now()}`,
-          title: 'Bienvenue dans le groupe ! 🎉',
+          title: 'Bienvenue dans le groupe !',
           body: `Vous avez rejoint la communauté "${parentInv.groupName}" avec succès.`,
           timestamp: 'A l\'instant',
           isRead: false,
@@ -320,9 +320,9 @@ export default function GroupesTab({ groups, setGroups, invitations, setInvitati
                 <button
                   type="button"
                   onClick={() => setShowCreateGroup(false)}
-                  className="text-slate-400 hover:text-slate-200 text-xs p-1"
+                  className="text-slate-400 hover:text-slate-200 p-1"
                 >
-                  ✕
+                  <X className="w-4 h-4" />
                 </button>
               </div>
 
@@ -334,7 +334,7 @@ export default function GroupesTab({ groups, setGroups, invitations, setInvitati
                     required
                     value={newGroupName}
                     onChange={(e) => setNewGroupName(e.target.value)}
-                    placeholder="ex: Co-auteurs ☕️"
+                    placeholder="ex: Co-auteurs"
                     className="w-full bg-slate-900 border border-slate-800 rounded-lg p-2 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-rose-500/50 text-left h-8"
                   />
                 </div>
@@ -346,7 +346,7 @@ export default function GroupesTab({ groups, setGroups, invitations, setInvitati
                     maxLength={2}
                     value={newGroupAvatar}
                     onChange={(e) => setNewGroupAvatar(e.target.value)}
-                    placeholder="👥"
+                    placeholder="https://..."
                     className="w-full bg-slate-900 border border-slate-800 rounded-lg p-2 text-xs text-center text-white focus:outline-none focus:border-rose-500/50 h-8"
                   />
                 </div>
@@ -433,7 +433,7 @@ export default function GroupesTab({ groups, setGroups, invitations, setInvitati
           <div className="mt-4 pt-4 border-t border-slate-800/80 text-left space-y-3">
             <div className="flex justify-between items-center">
               <span className="text-[10px] uppercase font-extrabold text-slate-400 tracking-wider flex items-center gap-1">
-                ⚙️ {t('groups_settings')}
+                <Settings className="w-3 h-3" /> {t('groups_settings')}
               </span>
               <div className="flex items-center gap-1">
                 <span className="text-[10px] text-slate-500 font-mono">{t('groups_admin')}</span>
@@ -501,7 +501,7 @@ export default function GroupesTab({ groups, setGroups, invitations, setInvitati
                     {isSavedNotice && (
                       <span className="text-emerald-400 text-[10px] font-bold animate-pulse flex items-center gap-1">
                         <Check className="w-3.5 h-3.5" />
-                        Paramètres du groupe enregistrés ! 🔐
+                        Paramètres du groupe enregistrés ! <Lock className="w-3 h-3" />
                       </span>
                     )}
                   </div>
@@ -704,7 +704,7 @@ export default function GroupesTab({ groups, setGroups, invitations, setInvitati
                       <span className={`text-xs font-semibold px-2 py-1 rounded ${
                         inv.status === 'accepted' ? 'text-emerald-400 bg-emerald-500/10' : 'text-red-400 bg-red-500/10'
                       }`}>
-                        {inv.status === 'accepted' ? 'Invitation acceptée ✅' : 'Invitation déclinée ✕'}
+                        {inv.status === 'accepted' ? <span className="flex items-center gap-1">Invitation acceptée <Check className="w-3 h-3" /></span> : <span className="flex items-center gap-1">Invitation déclinée <X className="w-3 h-3" /></span>}
                       </span>
                     )}
                   </div>
@@ -751,8 +751,8 @@ export default function GroupesTab({ groups, setGroups, invitations, setInvitati
                   )}
 
                   <div className="flex items-start gap-3 pr-4">
-                    <span className="text-lg mt-0.5">
-                      {notif.type === 'group' ? '👥' : notif.type === 'transaction' ? '💰' : '🚨'}
+                    <span className="mt-0.5">
+                      {notif.type === 'group' ? <Users className="w-4 h-4 text-blue-400" /> : notif.type === 'transaction' ? <Wallet className="w-4 h-4 text-emerald-400" /> : <AlertTriangle className="w-4 h-4 text-red-400" />}
                     </span>
                     <div className="space-y-0.5">
                       <h4 className="text-xs font-bold text-slate-200">

@@ -1,21 +1,26 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  CreditCard, 
-  Wallet, 
-  Send, 
-  ArrowDownLeft, 
-  ArrowUpRight, 
-  Phone, 
-  User, 
-  Euro, 
-  CircleDollarSign, 
+import {
+  CreditCard,
+  Wallet,
+  Send,
+  ArrowDownLeft,
+  ArrowUpRight,
+  Phone,
+  User,
+  Banknote,
+  CircleDollarSign,
   PlusCircle,
   Gift,
   Award,
   Copy,
   Users,
   Sparkles,
-  Share2
+  Share2,
+  Zap,
+  Check,
+  Wrench,
+  CheckCircle2,
+  Shield
 } from 'lucide-react';
 import { Contact, Transaction, Notification } from '../types';
 import { motion, AnimatePresence } from 'motion/react';
@@ -131,7 +136,7 @@ export default function PortefeuilleTab({
   const handleExecuteTransfer = () => {
     const amount = parseFloat(transferAmount);
     if (isNaN(amount) || amount <= 0) {
-      alert("Veuillez entrer un montant valide supérieur à 0 €.");
+      alert("Veuillez entrer un montant valide supérieur à 0 FCFA.");
       return;
     }
 
@@ -283,7 +288,7 @@ export default function PortefeuilleTab({
           <span className="text-[11px] uppercase tracking-wider text-slate-400 font-bold">Solde Disponible</span>
           <div className="flex items-baseline gap-2">
             <h1 className="text-3xl font-extrabold tracking-tight text-white font-mono">
-              {balance.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €
+              {balance.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} FCFA
             </h1>
             <span className="text-emerald-400 text-xs font-mono font-bold">Sans frais cachés</span>
           </div>
@@ -408,10 +413,10 @@ export default function PortefeuilleTab({
                       <span className={`text-sm font-bold font-mono ${
                         tx.type === 'send' ? 'text-red-400' : 'text-emerald-400'
                       }`}>
-                        {tx.type === 'send' ? '-' : '+'}{tx.amount.toFixed(2)} €
+                        {tx.type === 'send' ? '-' : '+'}{tx.amount.toFixed(2)} FCFA
                       </span>
                       {tx.fees > 0 && (
-                        <p className="text-[10px] text-slate-500 font-mono">Frais: {tx.fees.toFixed(2)} €</p>
+                        <p className="text-[10px] text-slate-500 font-mono">Frais: {tx.fees.toFixed(2)} FCFA</p>
                       )}
                     </div>
                   </div>
@@ -443,14 +448,14 @@ export default function PortefeuilleTab({
                 {/* Reward Badges */}
                 <div className="grid grid-cols-2 gap-2 mt-3.5 pt-3.5 border-t border-slate-800/80">
                   <div className="p-2.5 bg-slate-950/50 rounded-xl border border-slate-800 flex items-center gap-2">
-                    <span className="text-lg">💶</span>
+                    <Banknote className="w-5 h-5 text-emerald-400" />
                     <div className="text-left">
                       <span className="text-[9px] text-slate-500 uppercase font-mono block">Cadeau d'arrivée</span>
-                      <span className="text-xs font-bold text-white font-mono">+5.00 € chacun</span>
+                      <span className="text-xs font-bold text-white font-mono">+5.00 FCFA chacun</span>
                     </div>
                   </div>
                   <div className="p-2.5 bg-slate-950/50 rounded-xl border border-slate-800 flex items-center gap-2">
-                    <span className="text-lg">⚡</span>
+                    <Zap className="w-5 h-5 text-amber-400" />
                     <div className="text-left">
                       <span className="text-[9px] text-slate-500 uppercase font-mono block">Frais de Transfert</span>
                       <span className="text-xs font-bold text-amber-400 font-mono">Frais divisés par 2</span>
@@ -485,12 +490,12 @@ export default function PortefeuilleTab({
                 </div>
                 <div className="p-3 bg-slate-900 border border-slate-800 rounded-xl text-center">
                   <span className="text-[9px] text-slate-400 font-bold uppercase block mb-1">Gains parrain</span>
-                  <span className="text-sm font-extrabold text-emerald-400 font-mono">{referralEarnings.toFixed(2)} €</span>
+                  <span className="text-sm font-extrabold text-emerald-400 font-mono">{referralEarnings.toFixed(2)} FCFA</span>
                 </div>
                 <div className="p-3 bg-slate-900 border border-slate-800 rounded-xl text-center">
                   <span className="text-[9px] text-slate-400 font-bold uppercase block mb-1">Taux frais</span>
                   <span className="text-xs font-extrabold text-amber-400 font-mono">
-                    {hasReferred ? '0.05 % ✓' : '0.10 %'}
+                    {hasReferred ? <>0.05 % <Check className="w-3 h-3 inline text-emerald-400" /></> : '0.10 %'}
                   </span>
                 </div>
               </div>
@@ -498,7 +503,7 @@ export default function PortefeuilleTab({
               {/* SIMULATOR TOOL */}
               <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-4">
                 <div className="flex items-center gap-2 border-b border-slate-800/80 pb-2">
-                  <span className="text-base">🛠️</span>
+                    <Wrench className="w-4 h-4 text-slate-400" />
                   <div>
                     <h4 className="text-xs font-bold text-white uppercase tracking-wider">Simulateur d'inscription filleul</h4>
                     <p className="text-[10px] text-slate-400 font-mono">Simulez le parcours d'un nouvel utilisateur qui s'inscrit et effectue sa 1ère transaction</p>
@@ -549,7 +554,7 @@ export default function PortefeuilleTab({
                         <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold shrink-0 ${
                           simStep >= 1 ? 'bg-[#00a884] text-white animate-pulse' : 'bg-slate-800 text-slate-500'
                         }`}>
-                          {simStep > 1 ? '✓' : '1'}
+                          {simStep > 1 ? <Check className="w-3 h-3" /> : '1'}
                         </div>
                         <span className={`text-xs ${simStep === 1 ? 'text-emerald-400 font-bold' : 'text-slate-400'}`}>
                           {testReferralName} s'enregistre avec le code SECURE-MD-2026...
@@ -560,10 +565,10 @@ export default function PortefeuilleTab({
                         <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold shrink-0 ${
                           simStep >= 2 ? 'bg-[#00a884] text-white animate-pulse' : 'bg-slate-800 text-slate-500'
                         }`}>
-                          {simStep > 2 ? '✓' : '2'}
+                          {simStep > 2 ? <Check className="w-3 h-3" /> : '2'}
                         </div>
                         <span className={`text-xs ${simStep === 2 ? 'text-emerald-400 font-bold' : 'text-slate-400'}`}>
-                          Première transaction ({testReferralName} transfère 20.00 €)...
+                          Première transaction ({testReferralName} transfère 20.00 FCFA)...
                         </span>
                       </div>
 
@@ -574,7 +579,7 @@ export default function PortefeuilleTab({
                           3
                         </div>
                         <span className={`text-xs ${simStep === 3 ? 'text-emerald-400 font-bold' : 'text-slate-400'}`}>
-                          Distribution des primes (+5.00 € chacun)...
+                          Distribution des primes (+5.00 FCFA chacun)...
                         </span>
                       </div>
                     </div>
@@ -596,7 +601,7 @@ export default function PortefeuilleTab({
                     className="bg-slate-950 p-4 rounded-xl border border-emerald-500/25 space-y-4"
                   >
                     <div className="p-2 bg-emerald-500/10 border border-emerald-500/20 rounded-lg flex items-center gap-2 text-xs text-emerald-400 font-medium">
-                      <span>🎉</span>
+                      <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
                       <span>Parrainage validé avec succès !</span>
                     </div>
 
@@ -604,7 +609,7 @@ export default function PortefeuilleTab({
                       <div className="flex justify-between items-center text-slate-400">
                         <span className="font-semibold text-slate-300">Votre Récompense (Parrain) :</span>
                         <div className="text-right">
-                          <span className="font-black text-white font-mono block">+{simSummary.bonusReferrer.toFixed(2)} € crédité</span>
+                          <span className="font-black text-white font-mono block">+{simSummary.bonusReferrer.toFixed(2)} FCFA crédité</span>
                           <span className="text-[9px] text-amber-400">Frais divisés par 2 (0.05 %) active !</span>
                         </div>
                       </div>
@@ -612,8 +617,8 @@ export default function PortefeuilleTab({
                       <div className="flex justify-between items-center text-slate-400">
                         <span className="font-semibold text-slate-300">Récompense de {simSummary.name} (Filleul) :</span>
                         <div className="text-right">
-                          <span className="font-black text-emerald-400 font-mono block">+{simSummary.bonusReferred.toFixed(2)} € offert</span>
-                          <span className="text-[9px] text-slate-500">1ère transaction complétée ✓</span>
+                          <span className="font-black text-emerald-400 font-mono block">+{simSummary.bonusReferred.toFixed(2)} FCFA offert</span>
+                          <span className="text-[9px] text-slate-500">1ère transaction complétée <Check className="w-3 h-3 inline text-emerald-400" /></span>
                         </div>
                       </div>
                     </div>
@@ -657,9 +662,7 @@ export default function PortefeuilleTab({
           <div className="space-y-3">
             <label className="text-[10px] uppercase font-bold text-slate-400">Numéro de téléphone ou Nom :</label>
             <div className="relative">
-              <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-500">
-                👤
-              </span>
+              <User className="absolute left-3 top-3 w-4 h-4 text-slate-500 pointer-events-none" />
               <input
                 type="text"
                 placeholder="Ex: +33 6 12 34 56 78 ou 'Alice'"
@@ -685,7 +688,7 @@ export default function PortefeuilleTab({
                 <div className="flex items-center gap-3">
                   <img src={matchedContact.avatar} alt="Matched User" className="w-10 h-10 rounded-full object-cover border border-slate-800" />
                   <div>
-                    <h4 className="text-xs font-bold text-blue-400">Compte trouvé ! ✅</h4>
+                    <h4 className="text-xs font-bold text-blue-400 flex items-center gap-1">Compte trouvé ! <CheckCircle2 className="w-3.5 h-3.5" /></h4>
                     <p className="text-xs font-bold text-slate-100">{matchedContact.name}</p>
                     <span className="text-[9px] text-slate-400 font-mono">{matchedContact.phone}</span>
                   </div>
@@ -756,10 +759,10 @@ export default function PortefeuilleTab({
           </div>
 
           <div className="space-y-2">
-            <label className="text-[10px] uppercase font-bold text-slate-400">Saisir le Montant en Euros (€) :</label>
+            <label className="text-[10px] uppercase font-bold text-slate-400">Saisir le Montant en FCFA :</label>
             <div className="relative">
               <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-lg text-slate-500 font-bold">
-                €
+                FCFA
               </span>
               <input
                 type="number"
@@ -775,16 +778,16 @@ export default function PortefeuilleTab({
               <div className="p-3 bg-blue-950/20 border border-blue-900/30 rounded-xl space-y-1.5 text-xs text-slate-300">
                 <div className="flex justify-between font-mono">
                   <span>Montant brut :</span>
-                  <span>{parseFloat(transferAmount).toFixed(2)} €</span>
+                  <span>{parseFloat(transferAmount).toFixed(2)} FCFA</span>
                 </div>
                 <div className="flex justify-between font-mono text-blue-400 font-bold">
                   <span>Frais Pay&Chat réduits ({hasReferred ? '0.05 % parrain' : '0.1 %'}) :</span>
-                  <span>{parseFloat((parseFloat(transferAmount) * (hasReferred ? 0.0005 : 0.001)).toFixed(2))} €</span>
+                  <span>{parseFloat((parseFloat(transferAmount) * (hasReferred ? 0.0005 : 0.001)).toFixed(2))} FCFA</span>
                 </div>
                 <div className="h-px bg-slate-800" />
                 <div className="flex justify-between font-bold flex-row text-left justify-items-stretch">
                   <span>Total à débiter :</span>
-                  <span className="ml-auto">{parseFloat((parseFloat(transferAmount) * (hasReferred ? 1.0005 : 1.001)).toFixed(2))} €</span>
+                  <span className="ml-auto">{parseFloat((parseFloat(transferAmount) * (hasReferred ? 1.0005 : 1.001)).toFixed(2))} FCFA</span>
                 </div>
               </div>
             )}
@@ -815,8 +818,8 @@ export default function PortefeuilleTab({
           className="bg-slate-900 border border-emerald-500/30 rounded-3xl p-6 space-y-5 text-center relative"
         >
           {/* Confetti decoration */}
-          <div className="mx-auto w-14 h-14 bg-emerald-600/10 border border-emerald-500/20 rounded-full flex items-center justify-center text-emerald-400 text-3xl">
-            ✓
+          <div className="mx-auto w-14 h-14 bg-emerald-600/10 border border-emerald-500/20 rounded-full flex items-center justify-center text-emerald-400">
+            <CheckCircle2 className="w-8 h-8" />
           </div>
 
           <div className="space-y-1">
@@ -836,22 +839,22 @@ export default function PortefeuilleTab({
             <div className="h-px bg-slate-900" />
             <div className="flex justify-between text-xs text-slate-400">
               <span>Montant transféré :</span>
-              <span className="font-bold text-white">{lastTx.amount.toFixed(2)} €</span>
+              <span className="font-bold text-white">{lastTx.amount.toFixed(2)} FCFA</span>
             </div>
             <div className="flex justify-between text-xs text-slate-400">
               <span>Frais de courtage réduits :</span>
-              <span className="font-bold text-blue-400">{lastTx.fees.toFixed(2)} €</span>
+              <span className="font-bold text-blue-400">{lastTx.fees.toFixed(2)} FCFA</span>
             </div>
             <div className="h-px bg-slate-900" />
             <div className="flex justify-between text-sm font-bold text-slate-200">
               <span>Montant Débité :</span>
-              <span className="text-emerald-400 font-mono">{(lastTx.amount + lastTx.fees).toFixed(2)} €</span>
+              <span className="text-emerald-400 font-mono">{(lastTx.amount + lastTx.fees).toFixed(2)} FCFA</span>
             </div>
           </div>
 
           <p className="text-[10px] text-slate-500 font-mono">
             ID de référence : {lastTx.id} <br />
-            Chiffrement de bout en bout conforme SEPA & RGPD 🛡️
+            Chiffrement de bout en bout conforme SEPA & RGPD <Shield className="w-3 h-3 inline text-emerald-400" />
           </p>
 
           <button

@@ -13,6 +13,7 @@ import { storyRouter, channelRouter } from './routes/story.routes';
 import { walletRouter } from './routes/wallet.routes';
 import { notificationRouter, profileRouter } from './routes/notification.routes';
 import { mediaRouter } from './routes/media.routes';
+import { contactRouter } from './routes/contact.routes';
 import { errorHandler, notFoundHandler } from './middleware/error';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -49,6 +50,7 @@ export const createApp = (): Application => {
   app.use('/api/v1', notificationRouter);
   app.use('/api/v1', profileRouter);
   app.use('/api/v1', mediaRouter);
+  app.use('/api/v1/contacts', contactRouter);
 
   // Serve built frontend (production) + SPA fallback
   const distDir = path.resolve(__dirname, '..', '..', 'dist');

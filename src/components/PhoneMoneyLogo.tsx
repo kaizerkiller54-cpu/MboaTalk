@@ -87,7 +87,7 @@ export default function PhoneMoneyLogo({ size = 'md', className = '', animate = 
           <rect x="69" y="28" width="16" height="10" rx="1.5" fill="url(#billGrad1)" stroke="#059669" strokeWidth="0.6"
             filter="url(#glow)" transform="rotate(-10 77 33)" />
           <text x="77" y="36" fill="white" fontSize="5" fontWeight="black" fontFamily="monospace" textAnchor="middle"
-            transform="rotate(-10 77 33)">€</text>
+            transform="rotate(-10 77 33)">FCFA</text>
         </motion.g>
 
         {/* ── MONEY BILL 2 (rising left) ── */}
@@ -110,7 +110,7 @@ export default function PhoneMoneyLogo({ size = 'md', className = '', animate = 
         }}>
           <circle cx="60" cy="28" r="4" fill="#fbbf24" stroke="#f59e0b" strokeWidth="0.8" filter="url(#glow)" />
           <circle cx="60" cy="28" r="2.5" fill="none" stroke="#f59e0b" strokeWidth="0.4" opacity="0.5" />
-          <text x="60" y="30" fill="#78350f" fontSize="4" fontWeight="bold" fontFamily="serif" textAnchor="middle">€</text>
+          <text x="60" y="30" fill="#78350f" fontSize="4" fontWeight="bold" fontFamily="serif" textAnchor="middle">FCFA</text>
         </motion.g>
 
         {/* ── Small sparkle dots ── */}

@@ -1,14 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Search, Send, Speech, MessageSquare, ArrowLeft, MoreVertical, Paperclip, File, Video, Phone, CheckCheck, Play, Pause, Repeat, Trash2, Mic, Image, Film, Smile, CircleDollarSign, ShieldCheck } from 'lucide-react';
+import { Search, Send, Speech, MessageSquare, ArrowLeft, MoreVertical, Paperclip, File, FileText, Video, Phone, CheckCheck, Play, Pause, Repeat, Trash2, Mic, Image, Film, Smile, CircleDollarSign, ShieldCheck, Users, Download, X, Banknote, Share2, UserPlus } from 'lucide-react';
 import { Chat, Contact, Group, Message, Story } from '../types';
 import { motion, AnimatePresence } from 'motion/react';
 import { api } from '../services/api';
 import { useLang } from '../i18n/LanguageContext';
+import AddContactModal from './AddContactModal';
 
 interface DiscussionsTabProps {
   chats: Chat[];
   setChats: React.Dispatch<React.SetStateAction<Chat[]>>;
   contacts: Contact[];
+  setContacts?: React.Dispatch<React.SetStateAction<Contact[]>>;
   groups: Group[];
   stories: Story[];
   setStories: React.Dispatch<React.SetStateAction<Story[]>>;
@@ -17,7 +19,7 @@ interface DiscussionsTabProps {
   isMobile?: boolean;
 }
 
-export default function DiscussionsTab({ chats, setChats, contacts, groups, stories, setStories, onStartCall, onSendMoneyClick, isMobile = false }: DiscussionsTabProps) {
+export default function DiscussionsTab({ chats, setChats, contacts, setContacts, groups, stories, setStories, onStartCall, onSendMoneyClick, isMobile = false }: DiscussionsTabProps) {
   const { t } = useLang();
   const [searchTerm, setSearchTerm] = useState('');
   const [activeChatId, setActiveChatId] = useState<string | null>(null);
@@ -32,6 +34,7 @@ export default function DiscussionsTab({ chats, setChats, contacts, groups, stor
   // Attachment menu states
   const [showAttachMenu, setShowAttachMenu] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
+  const [showAddContact, setShowAddContact] = useState(false);
   const [recordingSeconds, setRecordingSeconds] = useState(0);
   const recordTimerRef = useRef<number | null>(null);
 
@@ -77,10 +80,10 @@ export default function DiscussionsTab({ chats, setChats, contacts, groups, stor
         setChats(prev => prev.map(chat => {
           if (chat.id === activeChatId) {
             let typeName = 'Piece jointe';
-            if (type === 'image') typeName = '🖼️ Image';
-            else if (type === 'video') typeName = '🎥 Vidéo';
-            else if (type === 'gif') typeName = '👾 GIF';
-            else if (type === 'document') typeName = `📄 Document: ${name}`;
+            if (type === 'image') typeName = 'Image';
+            else if (type === 'video') typeName = 'Vidéo';
+            else if (type === 'gif') typeName = 'GIF';
+            else if (type === 'document') typeName = `Document: ${name}`;
 
             return {
               ...chat,
@@ -177,7 +180,7 @@ export default function DiscussionsTab({ chats, setChats, contacts, groups, stor
             return {
               ...chat,
               messages: [...chat.messages, res.message],
-              recentMessage: `🎤 Message vocal (${durationText})`,
+              recentMessage: `Message vocal (${durationText})`,
               lastActive: res.message.timestamp
             };
           }
@@ -207,7 +210,7 @@ export default function DiscussionsTab({ chats, setChats, contacts, groups, stor
             return {
               ...chat,
               messages: [...chat.messages, res.message],
-              recentMessage: `📄 Document: ${docName}`,
+              recentMessage: `Document: ${docName}`,
               lastActive: res.message.timestamp
             };
           }
@@ -232,7 +235,7 @@ export default function DiscussionsTab({ chats, setChats, contacts, groups, stor
       });
       if (res.success && res.story) {
         setStories(prev => [res.story, ...prev]);
-        alert(`Vous avez repartagé le statut de ${story.contactName} sur votre fil de statuts ! 🔁`);
+        alert(`Vous avez repartagé le statut de ${story.contactName} sur votre fil de statuts !`);
       }
     } catch (err) {
       console.error('Failed to share story status:', err);
@@ -244,7 +247,7 @@ export default function DiscussionsTab({ chats, setChats, contacts, groups, stor
       const g = groups.find(gp => gp.id === chat.groupId);
       return {
         name: g?.name || 'Groupe sans nom',
-        avatar: g?.avatar || '👥',
+        avatar: g?.avatar || '',
         isGroup: true,
         phone: 'Membres multiples'
       };
@@ -260,6 +263,7 @@ export default function DiscussionsTab({ chats, setChats, contacts, groups, stor
   };
 
   return (
+    <>
     <div className={`flex-1 flex flex-col font-sans text-white relative min-h-0 ${isMobile ? 'h-full overflow-hidden' : 'h-[640px] md:h-full'}`}>
       {/* Grid container with dual panels on desktop, single panel toggling on mobile */}
       <div className={`grid h-full min-h-0 w-full flex-1 ${isMobile ? 'grid-cols-1 gap-0' : 'grid-cols-1 md:grid-cols-12 md:gap-4 lg:gap-5'}`}>
@@ -269,17 +273,26 @@ export default function DiscussionsTab({ chats, setChats, contacts, groups, stor
           className={`${activeChatId ? (isMobile ? 'hidden' : 'hidden md:flex') : 'flex'} flex-col ${isMobile ? 'w-full h-full pb-4' : 'md:col-span-12 lg:col-span-4 space-y-4 pb-20 md:pb-0 h-full min-h-0'}`}
         >
           {/* Search Input Bar */}
-          <div className="relative">
-            <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
-              <Search className="w-4 h-4 text-[#8696a0]" />
-            </span>
-            <input
-              type="text"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder={t('chat_search')}
-              className="w-full bg-[#1f2c34] border-none rounded-lg pl-10 pr-4 py-2 text-xs text-[#e9edef] placeholder-[#8696a0] focus:outline-none focus:ring-1 focus:ring-[#00a884] transition-all font-sans text-left h-9"
-            />
+          <div className="relative flex items-center gap-2">
+            <div className="relative flex-1">
+              <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                <Search className="w-4 h-4 text-[#8696a0]" />
+              </span>
+              <input
+                type="text"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder={t('chat_search')}
+                className="w-full bg-[#1f2c34] border-none rounded-lg pl-10 pr-4 py-2 text-xs text-[#e9edef] placeholder-[#8696a0] focus:outline-none focus:ring-1 focus:ring-[#00a884] transition-all font-sans text-left h-9"
+              />
+            </div>
+            <button
+              onClick={() => setShowAddContact(true)}
+              className="w-9 h-9 bg-[#00a884] hover:bg-[#06846d] rounded-lg flex items-center justify-center text-white shrink-0"
+              title="Ajouter un contact"
+            >
+              <UserPlus className="w-4 h-4" />
+            </button>
           </div>
 
           {/* Discussions Feed layout */}
@@ -443,7 +456,7 @@ export default function DiscussionsTab({ chats, setChats, contacts, groups, stor
                                   }}
                                   className="text-[9px] text-teal-400 hover:text-teal-300 hover:underline font-bold inline-block mt-0.5"
                                 >
-                                  Ouvrir / Télécharger 📥
+                                  Ouvrir / Télécharger <Download className="w-3 h-3 inline" />
                                 </a>
                               </div>
                             </div>
@@ -527,8 +540,8 @@ export default function DiscussionsTab({ chats, setChats, contacts, groups, stor
                     className="bg-slate-900 border-t border-slate-800 p-3 space-y-3 shrink-0 text-left"
                   >
                     <div className="flex items-center justify-between text-xs text-slate-400 pb-1 border-b border-slate-800/85 font-sans">
-                      <span className="font-bold flex items-center gap-1">📎 {t('chat_attachments')}</span>
-                      <button onClick={() => setShowAttachMenu(false)} className="text-[10px] text-emerald-400 font-extrabold cursor-pointer p-1">✕</button>
+                      <span className="font-bold flex items-center gap-1"><Paperclip className="w-3.5 h-3.5" /> {t('chat_attachments')}</span>
+                      <button onClick={() => setShowAttachMenu(false)} className="text-emerald-400 cursor-pointer p-1"><X className="w-4 h-4" /></button>
                     </div>
 
                     {/* DOUBLE ACTION: 1) SELECT REAL FILE FROM SYSTEM */}
@@ -597,7 +610,7 @@ export default function DiscussionsTab({ chats, setChats, contacts, groups, stor
                           <div className="p-1.5 bg-emerald-500/20 text-[#00a884] rounded animate-pulse">
                             <CircleDollarSign className="w-4 h-4 font-extrabold" />
                           </div>
-                          <span className="text-[9px] font-extrabold text-[#00a884]">Argent 💵</span>
+                          <span className="text-[9px] font-extrabold text-[#00a884] flex items-center gap-1"><Banknote className="w-3 h-3" /> Argent</span>
                         </button>
                       </div>
                     </div>
@@ -658,7 +671,7 @@ export default function DiscussionsTab({ chats, setChats, contacts, groups, stor
 
                     {/* Share Active status trigger in Chat */}
                     <div className="space-y-1.5 pt-1 font-sans text-left">
-                      <p className="text-[10px] uppercase font-bold text-slate-400 flex items-center gap-1">🔁 Repartager un statut de contact :</p>
+                      <p className="text-[10px] uppercase font-bold text-slate-400 flex items-center gap-1"><Share2 className="w-3 h-3" /> Repartager un statut de contact :</p>
                       <div className="flex gap-2 overflow-x-auto py-1 no-scrollbar animate-fade-in" id="status-share-container">
                         {stories.map(st => (
                           <button
@@ -778,5 +791,22 @@ export default function DiscussionsTab({ chats, setChats, contacts, groups, stor
 
       </div>
     </div>
+    <AddContactModal
+      isOpen={showAddContact}
+      onClose={() => setShowAddContact(false)}
+      onContactAdded={async (contact) => {
+        if (setContacts) setContacts(prev => [...prev, contact]);
+        // Create a direct chat with the new contact
+        try {
+          const res = await api.createChat({ contactId: contact.id });
+          if (res.success && res.chat && setChats) {
+            setChats(prev => [res.chat, ...prev]);
+          }
+        } catch (err) {
+          console.error('Failed to create chat:', err);
+        }
+      }}
+    />
+    </>
   );
 }

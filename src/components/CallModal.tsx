@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Phone, PhoneOff, Video, Mic, MicOff, Volume2, VolumeX, Users, UserPlus, Smile } from 'lucide-react';
+import { Phone, PhoneOff, Video, Camera, Mic, MicOff, Volume2, VolumeX, Users, UserPlus, Smile, ThumbsUp, Hand, Heart, Laugh, Flame } from 'lucide-react';
 import { motion } from 'motion/react';
 import { useLang } from '../i18n/LanguageContext';
 
@@ -137,7 +137,7 @@ export default function CallModal({ isOpen, onClose, callerName, callerAvatar, t
               <div className="absolute top-3 right-3 w-24 aspect-[3/4] bg-slate-800 border-2 border-emerald-500 rounded-lg overflow-hidden shadow-lg">
                 <div className="w-full h-full bg-slate-950 flex flex-col items-center justify-center text-[10px] text-slate-500 relative">
                   <div className="absolute inset-0 bg-emerald-500/10" />
-                  <span className="text-xl">🤳</span>
+                  <Camera className="w-6 h-6 text-emerald-400" />
                   <span>{t('call_me_camera')}</span>
                 </div>
               </div>
@@ -164,7 +164,7 @@ export default function CallModal({ isOpen, onClose, callerName, callerAvatar, t
                     <img src={callerAvatar} alt={callerName} className="w-full h-full object-cover" />
                   ) : (
                     <div className="w-full h-full bg-slate-800 border border-slate-705 flex items-center justify-center text-3xl font-bold text-emerald-400">
-                      {isGroupCall ? '👥' : callerName.charAt(0)}
+                      {isGroupCall ? <Users className="w-12 h-12" /> : callerName.charAt(0)}
                     </div>
                   )}
                 </div>
@@ -186,11 +186,11 @@ export default function CallModal({ isOpen, onClose, callerName, callerAvatar, t
         {/* Reaction strip during active call */}
         {callStatus === 'active' && (
           <div className="flex justify-center items-center gap-3 bg-slate-800/40 backdrop-blur-sm p-2 rounded-xl border border-slate-800 max-w-xs mx-auto mb-4">
-            <button onClick={() => triggerReaction('👍')} className="hover:scale-125 transition duration-150 p-1 text-sm bg-slate-800 rounded">👍</button>
-            <button onClick={() => triggerReaction('👋')} className="hover:scale-125 transition duration-150 p-1 text-sm bg-slate-800 rounded">👋</button>
-            <button onClick={() => triggerReaction('❤️')} className="hover:scale-125 transition duration-150 p-1 text-sm bg-slate-800 rounded">❤️</button>
-            <button onClick={() => triggerReaction('😂')} className="hover:scale-125 transition duration-150 p-1 text-sm bg-slate-800 rounded">😂</button>
-            <button onClick={() => triggerReaction('🔥')} className="hover:scale-125 transition duration-150 p-1 text-sm bg-slate-800 rounded">🔥</button>
+            <button onClick={() => triggerReaction('thumbsup')} className="hover:scale-125 transition duration-150 p-1.5 text-sm bg-slate-800 rounded"><ThumbsUp className="w-4 h-4" /></button>
+            <button onClick={() => triggerReaction('wave')} className="hover:scale-125 transition duration-150 p-1.5 text-sm bg-slate-800 rounded"><Hand className="w-4 h-4" /></button>
+            <button onClick={() => triggerReaction('heart')} className="hover:scale-125 transition duration-150 p-1.5 text-sm bg-slate-800 rounded"><Heart className="w-4 h-4" /></button>
+            <button onClick={() => triggerReaction('laugh')} className="hover:scale-125 transition duration-150 p-1.5 text-sm bg-slate-800 rounded"><Laugh className="w-4 h-4" /></button>
+            <button onClick={() => triggerReaction('fire')} className="hover:scale-125 transition duration-150 p-1.5 text-sm bg-slate-800 rounded"><Flame className="w-4 h-4" /></button>
             <div className="h-4 w-px bg-slate-700" />
             <Smile className="w-4 h-4 text-slate-400" />
           </div>

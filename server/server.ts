@@ -630,8 +630,8 @@ app.post('/api/wallet/transfer', requireUser, (req: Request, res: Response) => {
       id: `tx_receipt_${Date.now()}`,
       senderId: 'me',
       type: 'document',
-      text: `💵 Transfert de ${amount.toFixed(2)} € effectué avec succès !`,
-      fileName: `Reçu_Transfert_${amount.toFixed(0)}€.pdf`,
+      text: `💵 Transfert de ${amount.toFixed(2)} FCFA effectué avec succès !`,
+      fileName: `Reçu_Transfert_${amount.toFixed(0)}FCFA.pdf`,
       fileSize: '1.2 Kb',
       timestamp: new Date().toISOString()
     };
@@ -639,7 +639,7 @@ app.post('/api/wallet/transfer', requireUser, (req: Request, res: Response) => {
     if (chatIdx !== -1) {
       const activeChat = { ...chats[chatIdx] };
       activeChat.messages = [...activeChat.messages, receiptMsg];
-      activeChat.recentMessage = `💵 Transfert de ${amount.toFixed(2)} € Réussi`;
+      activeChat.recentMessage = `💵 Transfert de ${amount.toFixed(2)} FCFA Réussi`;
       activeChat.lastActive = receiptMsg.timestamp;
       chats[chatIdx] = activeChat;
     } else {
@@ -649,7 +649,7 @@ app.post('/api/wallet/transfer', requireUser, (req: Request, res: Response) => {
         contactId: contact.id,
         unreadCount: 0,
         lastActive: receiptMsg.timestamp,
-        recentMessage: `💵 Transfert de ${amount.toFixed(2)} € Réussi`,
+        recentMessage: `💵 Transfert de ${amount.toFixed(2)} FCFA Réussi`,
         messages: [receiptMsg]
       };
       chats.push(newChat);
@@ -688,7 +688,7 @@ app.post('/api/wallet/transfer', requireUser, (req: Request, res: Response) => {
     const recipientNotification: Notification = {
       id: `n_tx_${Date.now()}`,
       title: 'Virement reçu ! ✅',
-      body: `Vous avez reçu ${amount.toFixed(2)} € de la part de ${userPhone}.`,
+      body: `Vous avez reçu ${amount.toFixed(2)} FCFA de la part de ${userPhone}.`,
       timestamp: 'À l\'instant',
       isRead: false,
       type: 'transaction'
@@ -715,8 +715,8 @@ app.post('/api/wallet/transfer', requireUser, (req: Request, res: Response) => {
       id: `tx_receipt_rec_${Date.now()}`,
       senderId: senderContactInRecipient.id,
       type: 'document',
-      text: `💵 Vous avez reçu un virement de ${amount.toFixed(2)} € !`,
-      fileName: `Reçu_Virement_${amount.toFixed(0)}€.pdf`,
+      text: `💵 Vous avez reçu un virement de ${amount.toFixed(2)} FCFA !`,
+      fileName: `Reçu_Virement_${amount.toFixed(0)}FCFA.pdf`,
       fileSize: '1.2 Kb',
       timestamp: new Date().toISOString()
     };
@@ -724,7 +724,7 @@ app.post('/api/wallet/transfer', requireUser, (req: Request, res: Response) => {
     if (recipientChatIdx !== -1) {
       const activeChat = { ...recipientChats[recipientChatIdx] };
       activeChat.messages = [...activeChat.messages, receiptMsgRecipient];
-      activeChat.recentMessage = `💵 Virement de ${amount.toFixed(2)} € Reçu`;
+      activeChat.recentMessage = `💵 Virement de ${amount.toFixed(2)} FCFA Reçu`;
       activeChat.lastActive = receiptMsgRecipient.timestamp;
       activeChat.unreadCount = (activeChat.unreadCount || 0) + 1;
       recipientChats[recipientChatIdx] = activeChat;
@@ -734,7 +734,7 @@ app.post('/api/wallet/transfer', requireUser, (req: Request, res: Response) => {
         contactId: senderContactInRecipient.id,
         unreadCount: 1,
         lastActive: receiptMsgRecipient.timestamp,
-        recentMessage: `💵 Virement de ${amount.toFixed(2)} € Reçu`,
+        recentMessage: `💵 Virement de ${amount.toFixed(2)} FCFA Reçu`,
         messages: [receiptMsgRecipient]
       };
       recipientChats.push(newChat);
@@ -811,7 +811,7 @@ app.post('/api/wallet/referral', requireUser, (req: Request, res: Response) => {
   const newNotification: Notification = {
     id: `notif_ref_${Date.now()}`,
     title: 'Félicitations ! Parrainage Réussi 🎉',
-    body: `Votre filleul ${name} s'est inscrit avec votre code et a effectué son premier transfert. Un bonus de +5.00 € a été ajouté à votre portefeuille et vos frais sont réduits de 50% !`,
+    body: `Votre filleul ${name} s'est inscrit avec votre code et a effectué son premier transfert. Un bonus de +5.00 FCFA a été ajouté à votre portefeuille et vos frais sont réduits de 50% !`,
     timestamp: 'À l\'instant',
     isRead: false,
     type: 'transaction'

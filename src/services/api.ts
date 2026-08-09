@@ -1,5 +1,5 @@
 import type { UserProfile } from '../../server/db';
-import { Message, Chat, Story, Channel, Group, GroupInvitation, Transaction, Notification, GroupPost } from '../types';
+import { Message, Chat, Story, Channel, Group, GroupInvitation, Transaction, Notification, GroupPost, Contact } from '../types';
 import { apiFetch, tokenStore } from './client';
 
 const storeSession = (res: { user: UserProfile; accessToken?: string; refreshToken?: string }) => {
@@ -155,6 +155,18 @@ export const api = {
     return apiFetch<{ success: boolean; user: UserProfile }>('/api/v1/wallet/referral', {
       method: 'POST',
       body: data
+    });
+  },
+
+  // Contacts
+  async searchContact(email: string) {
+    return apiFetch<{ success: boolean; users: Array<{ id: string; name: string; email: string; phone: string; avatarUrl: string; statusText: string; isOnline: boolean; isContact: boolean }> }>(`/api/v1/contacts/search?email=${encodeURIComponent(email)}`);
+  },
+
+  async addContact(email: string) {
+    return apiFetch<{ success: boolean; contact: Contact }>('/api/v1/contacts', {
+      method: 'POST',
+      body: { email }
     });
   },
 
