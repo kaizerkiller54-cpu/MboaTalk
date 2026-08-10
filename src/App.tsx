@@ -1,14 +1,4 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { 
-  INITIAL_CONTACTS, 
-  INITIAL_STORIES, 
-  CHANNEL_SUGGESTIONS, 
-  INITIAL_GROUPS, 
-  INITIAL_INVITATIONS, 
-  INITIAL_NOTIFICATIONS, 
-  INITIAL_CHATS, 
-  INITIAL_TRANSACTIONS 
-} from './data';
 import { Contact, Story, Channel, Group, GroupInvitation, Notification, Chat, Transaction } from './types';
 import { api } from './services/api';
 import { tokenStore } from './services/client';
@@ -69,14 +59,14 @@ export default function App() {
   
   const [isWalletUnlocked, setIsWalletUnlocked] = useState(false);
 
-  const [contacts, setContacts] = useState<Contact[]>(INITIAL_CONTACTS);
-  const [groups, setGroups] = useState<Group[]>(INITIAL_GROUPS);
-  const [chats, setChats] = useState<Chat[]>(INITIAL_CHATS);
-  const [stories, setStories] = useState<Story[]>(INITIAL_STORIES);
-  const [channels, setChannels] = useState<Channel[]>(CHANNEL_SUGGESTIONS);
-  const [invitations, setInvitations] = useState<GroupInvitation[]>(INITIAL_INVITATIONS);
-  const [notifications, setNotifications] = useState<Notification[]>(INITIAL_NOTIFICATIONS);
-  const [transactions, setTransactions] = useState<Transaction[]>(INITIAL_TRANSACTIONS);
+  const [contacts, setContacts] = useState<Contact[]>([]);
+  const [groups, setGroups] = useState<Group[]>([]);
+  const [chats, setChats] = useState<Chat[]>([]);
+  const [stories, setStories] = useState<Story[]>([]);
+  const [channels, setChannels] = useState<Channel[]>([]);
+  const [invitations, setInvitations] = useState<GroupInvitation[]>([]);
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [balance, setBalance] = useState<number>(450.00);
 
   useEffect(() => {

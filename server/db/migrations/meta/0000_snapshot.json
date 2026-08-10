@@ -1,5 +1,5 @@
 {
-  "id": "ca11e563-830f-4648-89d7-093183acf26b",
+  "id": "df15418f-9fff-4fe4-87ca-abd3b2538728",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -8,14 +8,14 @@
       "name": "channel_follows",
       "schema": "",
       "columns": {
-        "user_id": {
-          "name": "user_id",
+        "channel_id": {
+          "name": "channel_id",
           "type": "text",
           "primaryKey": false,
           "notNull": true
         },
-        "channel_id": {
-          "name": "channel_id",
+        "user_id": {
+          "name": "user_id",
           "type": "text",
           "primaryKey": false,
           "notNull": true
@@ -30,12 +30,12 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "channel_follows_user_id_users_id_fk": {
-          "name": "channel_follows_user_id_users_id_fk",
+        "channel_follows_channel_id_channels_id_fk": {
+          "name": "channel_follows_channel_id_channels_id_fk",
           "tableFrom": "channel_follows",
-          "tableTo": "users",
+          "tableTo": "channels",
           "columnsFrom": [
-            "user_id"
+            "channel_id"
           ],
           "columnsTo": [
             "id"
@@ -43,12 +43,12 @@
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
-        "channel_follows_channel_id_channels_id_fk": {
-          "name": "channel_follows_channel_id_channels_id_fk",
+        "channel_follows_user_id_users_id_fk": {
+          "name": "channel_follows_user_id_users_id_fk",
           "tableFrom": "channel_follows",
-          "tableTo": "channels",
+          "tableTo": "users",
           "columnsFrom": [
-            "channel_id"
+            "user_id"
           ],
           "columnsTo": [
             "id"
@@ -83,7 +83,7 @@
           "name": "avatar",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "subscribers": {
           "name": "subscribers",
@@ -96,7 +96,8 @@
           "name": "category",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "default": "''"
         },
         "creator_id": {
           "name": "creator_id",
@@ -126,7 +127,21 @@
         }
       },
       "indexes": {},
-      "foreignKeys": {},
+      "foreignKeys": {
+        "channels_creator_id_users_id_fk": {
+          "name": "channels_creator_id_users_id_fk",
+          "tableFrom": "channels",
+          "tableTo": "users",
+          "columnsFrom": [
+            "creator_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},
@@ -161,19 +176,6 @@
           "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": false
-        },
-        "last_read_at": {
-          "name": "last_read_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
         }
       },
       "indexes": {},
@@ -234,13 +236,6 @@
           "primaryKey": false,
           "notNull": false
         },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        },
         "updated_at": {
           "name": "updated_at",
           "type": "timestamp with time zone",
@@ -250,21 +245,7 @@
         }
       },
       "indexes": {},
-      "foreignKeys": {
-        "chats_group_id_groups_id_fk": {
-          "name": "chats_group_id_groups_id_fk",
-          "tableFrom": "chats",
-          "tableTo": "groups",
-          "columnsFrom": [
-            "group_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
+      "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},
@@ -449,12 +430,6 @@
           "primaryKey": false,
           "notNull": true
         },
-        "author_id": {
-          "name": "author_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
         "author_name": {
           "name": "author_name",
           "type": "text",
@@ -509,19 +484,6 @@
           ],
           "onDelete": "cascade",
           "onUpdate": "no action"
-        },
-        "group_posts_author_id_users_id_fk": {
-          "name": "group_posts_author_id_users_id_fk",
-          "tableFrom": "group_posts",
-          "tableTo": "users",
-          "columnsFrom": [
-            "author_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "set null",
-          "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {},
@@ -550,8 +512,7 @@
           "name": "avatar",
           "type": "text",
           "primaryKey": false,
-          "notNull": true,
-          "default": "'👥'"
+          "notNull": false
         },
         "description": {
           "name": "description",
@@ -577,13 +538,6 @@
           "type": "text",
           "primaryKey": false,
           "notNull": false
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
         }
       },
       "indexes": {},
@@ -618,18 +572,6 @@
           "primaryKey": true,
           "notNull": true
         },
-        "group_id": {
-          "name": "group_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "user_id": {
-          "name": "user_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
         "group_name": {
           "name": "group_name",
           "type": "text",
@@ -662,6 +604,76 @@
           "notNull": true,
           "default": "'pending'"
         },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "invitations_user_id_users_id_fk": {
+          "name": "invitations_user_id_users_id_fk",
+          "tableFrom": "invitations",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.media": {
+      "name": "media",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "file_name": {
+          "name": "file_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "mime_type": {
+          "name": "mime_type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "size_bytes": {
+          "name": "size_bytes",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "data": {
+          "name": "data",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
         "created_at": {
           "name": "created_at",
           "type": "timestamp with time zone",
@@ -672,22 +684,9 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "invitations_group_id_groups_id_fk": {
-          "name": "invitations_group_id_groups_id_fk",
-          "tableFrom": "invitations",
-          "tableTo": "groups",
-          "columnsFrom": [
-            "group_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "set null",
-          "onUpdate": "no action"
-        },
-        "invitations_user_id_users_id_fk": {
-          "name": "invitations_user_id_users_id_fk",
-          "tableFrom": "invitations",
+        "media_user_id_users_id_fk": {
+          "name": "media_user_id_users_id_fk",
+          "tableFrom": "media",
           "tableTo": "users",
           "columnsFrom": [
             "user_id"
@@ -743,12 +742,6 @@
         },
         "media_url": {
           "name": "media_url",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "media_storage_path": {
-          "name": "media_storage_path",
           "type": "text",
           "primaryKey": false,
           "notNull": false
@@ -973,7 +966,8 @@
           "type": "story_media_type",
           "typeSchema": "public",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "default": "'text'"
         },
         "text_content": {
           "name": "text_content",
@@ -989,12 +983,6 @@
         },
         "media_url": {
           "name": "media_url",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "media_storage_path": {
-          "name": "media_storage_path",
           "type": "text",
           "primaryKey": false,
           "notNull": false
@@ -1140,7 +1128,8 @@
           "name": "amount_fcfa",
           "type": "numeric(12, 2)",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "default": 0
         },
         "fees_fcfa": {
           "name": "fees_fcfa",
@@ -1192,15 +1181,7 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "transactions_reference_code_unique": {
-          "name": "transactions_reference_code_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "reference_code"
-          ]
-        }
-      },
+      "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false

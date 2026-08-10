@@ -57,7 +57,7 @@ groupRouter.post('/groups/create', requireAuth, validateBody(createGroupSchema),
         groupId: chat.groupId!,
         recentMessage: 'Vous avez créé ce groupe',
         unreadCount: 0,
-        lastActive: chat.createdAt.toISOString(),
+        lastActive: chat.updatedAt.toISOString(),
         messages: []
       }
     });
@@ -97,44 +97,21 @@ groupRouter.post('/groups/invitations/:id/respond', requireAuth, validateBody(re
     await db.update(invitations).set({ status }).where(eq(invitations.id, id));
 
     if (status === 'accepted') {
-      const groupId = inv.groupId || `g_inv_${Date.now()}`;
-      if (inv.groupId) {
-        const existing = await db.select().from(groups).where(eq(groups.id, groupId)).limit(1);
-        if (existing.length > 0) {
-          const membership = await db
-            .select()
-            .from(groupMembers)
-            .where(and(eq(groupMembers.groupId, groupId), eq(groupMembers.userId, userId)))
-            .limit(1);
-          if (membership.length === 0) {
-            await db.insert(groupMembers).values({ groupId, userId, role: 'member' });
-            await db
-              .update(groups)
-              .set({ membersCount: existing[0].membersCount + 1, recentActivity: 'Vous avez rejoint la communauté' })
-              .where(eq(groups.id, groupId));
-          }
-        }
-      } else {
-        await db.insert(groups).values({
-          id: groupId,
-          name: inv.groupName,
-          avatar: inv.avatar || '👥',
-          description: inv.description || null,
-          membersCount: 8,
-          recentActivity: 'Vous avez rejoint la communauté'
-        });
-        await db.insert(groupMembers).values({ groupId, userId, role: 'member' });
-      }
+      const groupId = `g_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`;
+      await db.insert(groups).values({
+        id: groupId,
+        name: inv.groupName,
+        avatar: inv.avatar || '',
+        description: inv.description || null,
+        membersCount: 1,
+        recentActivity: 'Vous avez rejoint la communauté'
+      });
+      await db.insert(groupMembers).values({ groupId, userId, role: 'member' });
 
-      const [existingChat] = await db.select().from(chats).where(and(eq(chats.groupId, groupId), eq(chats.type, 'group'))).limit(1);
-      if (!existingChat) {
-        const chatId = `chat_g_${Date.now()}`;
-        await db.insert(chats).values({ id: chatId, type: 'group', groupId });
-        await db.insert(chatMembers).values({ chatId, userId, unreadCount: 0 });
-        await db.insert(messages).values(messagesForGroup(chatId, userId, `Vous avez rejoint "${inv.groupName}"`));
-      } else {
-        await db.insert(chatMembers).values({ chatId: existingChat.id, userId, unreadCount: 0 }).onConflictDoNothing();
-      }
+      const chatId = `chat_g_${Date.now()}`;
+      await db.insert(chats).values({ id: chatId, type: 'group', groupId });
+      await db.insert(chatMembers).values({ chatId, userId, unreadCount: 0 });
+      await db.insert(messages).values(messagesForGroup(chatId, userId, `Vous avez rejoint "${inv.groupName}"`));
     }
 
     const invRows = await db.select().from(invitations).where(eq(invitations.userId, userId));
@@ -178,7 +155,6 @@ groupRouter.post('/groups/:groupId/post', requireAuth, validateBody(postSchema),
     await db.insert(groupPosts).values({
       id: postId,
       groupId,
-      authorId: userId,
       authorName: 'Moi',
       authorAvatar: user?.avatarUrl || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150',
       content

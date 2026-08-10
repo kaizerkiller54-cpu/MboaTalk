@@ -1,4 +1,4 @@
-import type { UserProfile } from '../../server/db';
+import type { UserProfile } from '../../server/db/types';
 import { Message, Chat, Story, Channel, Group, GroupInvitation, Transaction, Notification, GroupPost, Contact } from '../types';
 import { apiFetch, tokenStore } from './client';
 
