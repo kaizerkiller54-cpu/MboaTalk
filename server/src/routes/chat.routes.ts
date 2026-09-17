@@ -78,13 +78,48 @@ chatRouter.post('/messages', requireAuth, validateBody(sendMessageSchema), async
 
 const createChatSchema = z.object({
   contactId: z.string().optional(),
-  groupId: z.string().optional()
+  groupId: z.string().optional(),
+  email: z.string().email('Email invalide.').optional()
 });
 
 chatRouter.post('/chats/create', requireAuth, validateBody(createChatSchema), async (req, res, next) => {
   try {
-    const { contactId, groupId } = req.body;
+    const { contactId, groupId, email } = req.body;
     const userId = req.user!.id;
+
+    if (email) {
+      const targetEmail = email.trim().toLowerCase();
+      const [target] = await db.select().from(users).where(eq(users.email, targetEmail)).limit(1);
+      if (!target) throw new AppError('Aucun utilisateur trouvé avec cet email.', 404);
+      if (target.id === userId) throw new AppError('Vous ne pouvez pas écrire à votre propre compte.', 400);
+
+      await ensureContactsBothWays(req.user!, target);
+
+      const chatId = await createDirectChat(userId, target.id);
+      const chat = await legacyChat(chatId, userId);
+
+      const [contactRow] = await db
+        .select()
+        .from(contacts)
+        .where(and(eq(contacts.userId, userId), eq(contacts.contactUserId, target.id)))
+        .limit(1);
+
+      return res.json({
+        success: true,
+        chat,
+        contact: contactRow
+          ? {
+              id: contactRow.id,
+              userId: contactRow.contactUserId,
+              name: contactRow.name,
+              phone: contactRow.phone,
+              avatar: contactRow.avatar || '',
+              statusText: contactRow.statusText,
+              isOnline: contactRow.isOnline
+            }
+          : undefined
+      });
+    }
 
     if (groupId) {
       const [grp] = await db.select().from(groups).where(eq(groups.id, groupId)).limit(1);
@@ -146,6 +181,44 @@ chatRouter.delete('/chats/:chatId', requireAuth, async (req, res, next) => {
     next(err);
   }
 });
+
+async function ensureContactsBothWays(me: typeof users.$inferSelect, other: typeof users.$inferSelect) {
+  const existingMine = await db
+    .select()
+    .from(contacts)
+    .where(and(eq(contacts.userId, me.id), eq(contacts.contactUserId, other.id)))
+    .limit(1);
+  if (existingMine.length === 0) {
+    await db.insert(contacts).values({
+      id: `c_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
+      userId: me.id,
+      contactUserId: other.id,
+      name: other.name,
+      phone: other.phone,
+      avatar: other.avatarUrl,
+      statusText: other.statusText,
+      isOnline: other.isOnline
+    });
+  }
+
+  const existingTheirs = await db
+    .select()
+    .from(contacts)
+    .where(and(eq(contacts.userId, other.id), eq(contacts.contactUserId, me.id)))
+    .limit(1);
+  if (existingTheirs.length === 0) {
+    await db.insert(contacts).values({
+      id: `c_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
+      userId: other.id,
+      contactUserId: me.id,
+      name: me.name,
+      phone: me.phone,
+      avatar: me.avatarUrl,
+      statusText: me.statusText,
+      isOnline: me.isOnline
+    });
+  }
+}
 
 async function legacyChat(chatId: string, userId: string) {
   const [chat] = await db.select().from(chats).where(eq(chats.id, chatId)).limit(1);

@@ -7,7 +7,8 @@
   hasReferred: boolean;
   referralCount: number;
   referralEarnings: number;
-  avatar: string;
+avatar: string;
+  avatarUrl?: string;
   statusText?: string;
   isOnline: boolean;
   createdAt: string;

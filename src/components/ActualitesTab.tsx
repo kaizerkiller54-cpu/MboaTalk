@@ -72,13 +72,13 @@ export default function ActualitesTab({ stories, setStories, channels, setChanne
     return "Administrateur externe";
   };
 
-  const handleCreateChannel = (e: React.FormEvent) => {
+  const handleCreateChannel = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newChanName.trim()) return;
 
-    const newId = `c_gen_${Date.now()}`;
+    const tempId = `c_gen_${Date.now()}`;
     const newChan: Channel = {
-      id: newId,
+      id: tempId,
       name: newChanName,
       avatar: newChanAvatar,
       subscribers: '1',
@@ -89,15 +89,32 @@ export default function ActualitesTab({ stories, setStories, channels, setChanne
     };
 
     setChannels(prev => [...prev, newChan]);
-    setSelectedChannelId(newId);
+    setSelectedChannelId(tempId);
     setShowCreateChannel(false);
     setNewChanName('');
     setNewChanAvatar('');
     setNewChanCategory('Technologie');
     setNewChanDesc('');
+
+    try {
+      const res = await api.createChannel({
+        name: newChan.name,
+        avatar: newChan.avatar,
+        category: newChan.category,
+        description: newChan.description
+      });
+      if (res.success && res.channels) {
+        setChannels(res.channels);
+        const created = res.channels.find(ch => !channels.some(prev => prev.id === ch.id));
+        if (created) setSelectedChannelId(created.id);
+      }
+    } catch (err) {
+      console.error('[ActualitesTab] Erreur création canal:', err);
+      setChannels(prev => prev.filter(ch => ch.id !== tempId));
+    }
   };
 
-  const handleUpdateChannel = (e: React.FormEvent) => {
+  const handleUpdateChannel = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!activeSelectedChannel || activeSelectedChannel.creatorId !== 'me') return;
 
@@ -118,6 +135,18 @@ export default function ActualitesTab({ stories, setStories, channels, setChanne
     setTimeout(() => {
       setIsSavedChannelNotice(false);
     }, 4000);
+
+    try {
+      const res = await api.updateChannel(selectedChannelId, {
+        name: editChanName,
+        avatar: editChanAvatar,
+        category: editChanCategory,
+        description: editChanDesc
+      });
+      if (res.success && res.channels) setChannels(res.channels);
+    } catch (err) {
+      console.error('[ActualitesTab] Erreur mise à jour canal:', err);
+    }
   };
 
   const backgrounds = [

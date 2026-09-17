@@ -256,6 +256,7 @@ export const buildBundle = async (userId: string) => {
     email: user.email,
     password: '',
     pin: '',
+    avatarUrl: user.avatarUrl,
     balance: user.balanceFcfa,
     hasReferred: user.hasReferred,
     referralCount: user.referralCount,

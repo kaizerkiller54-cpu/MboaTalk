@@ -81,6 +81,40 @@ const respondSchema = z.object({
   status: z.enum(['accepted', 'declined'])
 });
 
+const createInvitationSchema = z.object({
+  groupName: z.string().min(1).max(100),
+  description: z.string().max(500).optional(),
+  inviterName: z.string().max(100).optional(),
+  avatar: z.string().max(500).optional(),
+  userId: z.string().min(1)
+});
+
+groupRouter.post('/groups/invitations/create', requireAuth, validateBody(createInvitationSchema), async (req, res, next) => {
+  try {
+    const { groupName, description, inviterName, avatar, userId: targetUserId } = req.body;
+    const inviter = req.user!;
+
+    const [target] = await db.select().from(users).where(eq(users.id, targetUserId)).limit(1);
+    if (!target) throw new AppError('Utilisateur cible introuvable.', 404);
+    if (target.id === inviter.id) throw new AppError('Vous ne pouvez pas vous inviter vous-même.', 400);
+
+    await db.insert(invitations).values({
+      id: `inv_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
+      groupName,
+      description: description || null,
+      inviterName: inviterName || inviter.name,
+      avatar: avatar || null,
+      status: 'pending',
+      userId: targetUserId
+    });
+
+    const invRows = await db.select().from(invitations).where(eq(invitations.userId, targetUserId));
+    return res.status(201).json({ success: true, invitations: invRows.map(invitationToLegacy) });
+  } catch (err) {
+    next(err);
+  }
+});
+
 groupRouter.post('/groups/invitations/:id/respond', requireAuth, validateBody(respondSchema), async (req, res, next) => {
   try {
     const { id } = req.params;

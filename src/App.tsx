@@ -10,6 +10,7 @@ import GroupesTab from './components/GroupesTab';
 import DiscussionsTab from './components/DiscussionsTab';
 import PortefeuilleTab from './components/PortefeuilleTab';
 import SettingsModal from './components/SettingsModal';
+import CookieConsentModal from './components/CookieConsentModal';
 import PhoneMoneyLogo from './components/PhoneMoneyLogo';
 import { 
   MessageSquare, 
@@ -54,6 +55,7 @@ export default function App() {
   const isLight = theme === 'light';
 
   const [isBiometricsVerified, setIsBiometricsVerified] = useState(false);
+  const [consentPending, setConsentPending] = useState(false);
   const [activeTab, setActiveTab] = useState<'actualites' | 'groupes' | 'discussions' | 'portefeuille' | 'compte'>('discussions');
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   
@@ -74,6 +76,9 @@ export default function App() {
     const hasToken = Boolean(tokenStore.getAccess() || tokenStore.getRefresh());
     if (savedPhone && hasToken) {
       setIsBiometricsVerified(true);
+      if (!localStorage.getItem('mboatalk_consent')) {
+        setConsentPending(true);
+      }
     }
   }, []);
 
@@ -94,6 +99,7 @@ export default function App() {
           localStorage.setItem('securconnect_has_referred', String(u.hasReferred));
           localStorage.setItem('securconnect_referral_count', String(u.referralCount));
           localStorage.setItem('securconnect_referral_earnings', String(u.referralEarnings));
+          if (u.avatarUrl) localStorage.setItem('securconnect_user_avatar', u.avatarUrl);
         }
       }).catch(err => {
         console.error('Failed to load user state from API:', err);
@@ -506,6 +512,11 @@ export default function App() {
           </div>
         </div>
       )}
+
+      <CookieConsentModal
+        isOpen={consentPending}
+        onComplete={() => setConsentPending(false)}
+      />
     </>
   );
 }

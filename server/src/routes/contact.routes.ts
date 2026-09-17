@@ -5,7 +5,7 @@ import { validateBody, validateQuery } from '../middleware/validate';
 import { AppError } from '../middleware/error';
 import { db } from '../../db/client';
 import { contacts, users } from '../../db/schema';
-import { and, eq, like } from 'drizzle-orm';
+import { and, eq, like, ne } from 'drizzle-orm';
 
 export const contactRouter = Router();
 
@@ -13,7 +13,7 @@ export const contactRouter = Router();
 contactRouter.get(
   '/search',
   requireAuth,
-  validateQuery(z.object({ email: z.string().email('Email invalide.') })),
+  validateQuery(z.object({ email: z.string().trim().min(1).max(255).transform((v) => v.toLowerCase()) })),
   async (req, res, next) => {
     try {
       const email = req.query.email!.toString().toLowerCase().trim();
@@ -22,7 +22,8 @@ contactRouter.get(
       const rows: any[] = await db
         .select({ id: users.id, name: users.name, email: users.email, phone: users.phone, avatarUrl: users.avatarUrl, statusText: users.statusText, isOnline: users.isOnline })
         .from(users)
-        .where(and(like(users.email, `%${email}%`), eq(users.id, userId)));
+        .where(and(like(users.email, `%${email}%`), ne(users.id, userId)))
+        .limit(20);
 
       // Exclude self and check if already a contact
       const existingContacts: any[] = await db.select({ contactUserId: contacts.contactUserId }).from(contacts).where(eq(contacts.userId, userId));

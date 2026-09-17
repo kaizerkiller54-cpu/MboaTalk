@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Search, Send, Speech, MessageSquare, ArrowLeft, MoreVertical, Paperclip, File, FileText, Video, Phone, CheckCheck, Play, Pause, Repeat, Trash2, Mic, Image, Film, Smile, CircleDollarSign, ShieldCheck, Users, Download, X, Banknote, Share2, UserPlus } from 'lucide-react';
+import { Search, Send, Speech, MessageSquare, ArrowLeft, MoreVertical, Paperclip, File, FileText, Video, Phone, CheckCheck, Play, Pause, Repeat, Trash2, Mic, Image, Film, Smile, CircleDollarSign, ShieldCheck, Users, Download, X, Banknote, Share2, UserPlus, MessageSquarePlus } from 'lucide-react';
 import { Chat, Contact, Group, Message, Story } from '../types';
 import { motion, AnimatePresence } from 'motion/react';
 import { api } from '../services/api';
 import { useLang } from '../i18n/LanguageContext';
 import AddContactModal from './AddContactModal';
+import NewMessageModal from './NewMessageModal';
 
 interface DiscussionsTabProps {
   chats: Chat[];
@@ -35,6 +36,7 @@ export default function DiscussionsTab({ chats, setChats, contacts, setContacts,
   const [showAttachMenu, setShowAttachMenu] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const [showAddContact, setShowAddContact] = useState(false);
+  const [showNewMessage, setShowNewMessage] = useState(false);
   const [recordingSeconds, setRecordingSeconds] = useState(0);
   const recordTimerRef = useRef<number | null>(null);
 
@@ -292,6 +294,13 @@ export default function DiscussionsTab({ chats, setChats, contacts, setContacts,
               title="Ajouter un contact"
             >
               <UserPlus className="w-4 h-4" />
+            </button>
+            <button
+              onClick={() => setShowNewMessage(true)}
+              className="w-9 h-9 bg-[#1f2c34] hover:bg-[#2a3942] border border-[#2a3942] rounded-lg flex items-center justify-center text-[#00a884] shrink-0"
+              title="Écrire à quelqu'un"
+            >
+              <MessageSquarePlus className="w-4 h-4" />
             </button>
           </div>
 
@@ -805,6 +814,21 @@ export default function DiscussionsTab({ chats, setChats, contacts, setContacts,
         } catch (err) {
           console.error('Failed to create chat:', err);
         }
+      }}
+    />
+    <NewMessageModal
+      isOpen={showNewMessage}
+      onClose={() => setShowNewMessage(false)}
+      onChatOpened={(chat, contact) => {
+        if (contact && setContacts) setContacts(prev => {
+          if (prev.some(c => c.id === contact.id)) return prev;
+          return [...prev, contact];
+        });
+        setChats(prev => {
+          if (prev.some(c => c.id === chat.id)) return prev;
+          return [chat, ...prev];
+        });
+        setActiveChatId(chat.id);
       }}
     />
     </>

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { ShieldCheck, ArrowRight, RefreshCw, Mail, Lock, Eye, EyeOff, Sparkles, User, MessageSquare, Zap, Globe } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import PhoneMoneyLogo from './PhoneMoneyLogo';
+import CookieConsentModal from './CookieConsentModal';
 import { api } from '../services/api';
 import { useLang } from '../i18n/LanguageContext';
 import { Lang } from '../i18n/translations';
@@ -57,6 +58,30 @@ export default function PhoneLoginAuth({ onSuccess }: PhoneLoginAuthProps) {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showRegisterPassword, setShowRegisterPassword] = useState(false);
   const [isRegistering, setIsRegistering] = useState(false);
+  const [showConsent, setShowConsent] = useState(false);
+
+  const finishAuth = () => {
+    if (localStorage.getItem('mboatalk_consent')) {
+      const overlay = document.getElementById('success-unlock-overlay');
+      if (overlay) {
+        overlay.classList.remove('opacity-0', 'pointer-events-none');
+        overlay.classList.add('opacity-100');
+      }
+      setTimeout(() => onSuccess(), 1200);
+    } else {
+      setShowConsent(true);
+    }
+  };
+
+  const handleConsentComplete = () => {
+    setShowConsent(false);
+    const overlay = document.getElementById('success-unlock-overlay');
+    if (overlay) {
+      overlay.classList.remove('opacity-0', 'pointer-events-none');
+      overlay.classList.add('opacity-100');
+    }
+    setTimeout(() => onSuccess(), 1200);
+  };
 
   const handleLogin = async () => {
     if (!emailAddress || !emailAddress.includes('@')) {
@@ -74,12 +99,7 @@ export default function PhoneLoginAuth({ onSuccess }: PhoneLoginAuthProps) {
       if (res.success && res.user) {
         localStorage.setItem('securconnect_user_phone', res.user.phone);
         localStorage.setItem('securconnect_user_email', res.user.email);
-        const overlay = document.getElementById('success-unlock-overlay');
-        if (overlay) {
-          overlay.classList.remove('opacity-0', 'pointer-events-none');
-          overlay.classList.add('opacity-100');
-        }
-        setTimeout(() => onSuccess(), 1200);
+        finishAuth();
       }
     } catch (err: any) {
       setErrorMessage(err.message || t('auth_error_login'));
@@ -108,12 +128,7 @@ export default function PhoneLoginAuth({ onSuccess }: PhoneLoginAuthProps) {
       if (res.success && res.user) {
         localStorage.setItem('securconnect_user_phone', res.user.phone);
         localStorage.setItem('securconnect_user_email', res.user.email);
-        const overlay = document.getElementById('success-unlock-overlay');
-        if (overlay) {
-          overlay.classList.remove('opacity-0', 'pointer-events-none');
-          overlay.classList.add('opacity-100');
-        }
-        setTimeout(() => onSuccess(), 1200);
+        finishAuth();
       }
     } catch (err: any) {
       setErrorMessage(err.message || t('auth_error_register'));
@@ -235,6 +250,11 @@ export default function PhoneLoginAuth({ onSuccess }: PhoneLoginAuthProps) {
           </div>
         </div>
       </div>
+
+      <CookieConsentModal
+        isOpen={showConsent}
+        onComplete={handleConsentComplete}
+      />
     </div>
   );
 }

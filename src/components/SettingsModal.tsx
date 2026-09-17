@@ -26,6 +26,7 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Notification } from '../types';
+import { api } from '../services/api';
 
 interface SettingsModalProps {
   isOpen: boolean;
@@ -163,11 +164,17 @@ export default function SettingsModal({ isOpen, onClose, setNotifications, theme
   }[appLanguage === 'fr' ? 'fr' : 'en'];
 
   // Handle saving Profile Info
-  const handleSaveProfile = () => {
+  const handleSaveProfile = async () => {
     localStorage.setItem('securconnect_user_name', userName);
     localStorage.setItem('securconnect_user_phone', userPhone);
     localStorage.setItem('securconnect_user_status', userBio);
     localStorage.setItem('securconnect_user_avatar', userAvatar);
+
+    try {
+      await api.updateProfile({ avatar: userAvatar });
+    } catch {
+      // avatar push is best-effort; local state is preserved
+    }
 
     setProfileSaved(true);
     setTimeout(() => {

@@ -45,6 +45,7 @@ const toPublicUser = (user: typeof users.$inferSelect) => ({
   email: user.email,
   name: user.name,
   balanceFcfa: user.balanceFcfa,
+  balance: user.balanceFcfa,
   hasReferred: user.hasReferred,
   referralCount: user.referralCount,
   referralEarnings: user.referralEarnings,

@@ -24,6 +24,20 @@ const addStorySchema = z.object({
   fileSize: z.string().max(50).optional()
 });
 
+const createChannelSchema = z.object({
+  name: z.string().min(1).max(100),
+  avatar: z.string().max(500).optional(),
+  category: z.string().max(100).optional(),
+  description: z.string().max(1000).optional()
+});
+
+const updateChannelSchema = z.object({
+  name: z.string().min(1).max(100).optional(),
+  avatar: z.string().max(500).optional(),
+  category: z.string().max(100).optional(),
+  description: z.string().max(1000).optional()
+});
+
 storyRouter.post('/stories', requireAuth, validateBody(addStorySchema), async (req, res, next) => {
   try {
     const { textBgColor, textContent, mediaUrl, mediaType, fileName, fileSize } = req.body;
@@ -86,6 +100,65 @@ storyRouter.post('/stories/:id/view', requireAuth, async (req, res, next) => {
     }
 
     return res.json({ success: true });
+  } catch (err) {
+    next(err);
+  }
+});
+
+channelRouter.post('/channels/create', requireAuth, validateBody(createChannelSchema), async (req, res, next) => {
+  try {
+    const { name, avatar, category, description } = req.body;
+    const userId = req.user!.id;
+
+    const channelId = `ch_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`;
+    await db.insert(channels).values({
+      id: channelId,
+      name,
+      avatar: avatar || '📢',
+      subscribers: '1',
+      category: category || '',
+      creatorId: userId,
+      description: description || null,
+      isVerified: false
+    });
+
+    await db.insert(channelFollows).values({ channelId, userId, followedAt: new Date() });
+
+    const follows = await db.select().from(channelFollows).where(eq(channelFollows.userId, userId));
+    const followedIds = new Set(follows.map((f) => f.channelId));
+    const all = await db.select().from(channels);
+    return res.status(201).json({
+      success: true,
+      channels: all.map((ch) => channelToLegacy(ch, followedIds, userId))
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
+channelRouter.post('/channels/:id/update', requireAuth, validateBody(updateChannelSchema), async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const userId = req.user!.id;
+
+    const [channel] = await db.select().from(channels).where(eq(channels.id, id)).limit(1);
+    if (!channel) throw new AppError('Canal introuvable.', 404);
+    if (channel.creatorId !== userId) throw new AppError('Seul le créateur du canal peut le modifier.', 403);
+
+    await db.update(channels).set({
+      name: req.body.name ?? channel.name,
+      avatar: req.body.avatar ?? channel.avatar,
+      category: req.body.category ?? channel.category,
+      description: req.body.description ?? channel.description
+    }).where(eq(channels.id, id));
+
+    const follows = await db.select().from(channelFollows).where(eq(channelFollows.userId, userId));
+    const followedIds = new Set(follows.map((f) => f.channelId));
+    const all = await db.select().from(channels);
+    return res.json({
+      success: true,
+      channels: all.map((ch) => channelToLegacy(ch, followedIds, userId))
+    });
   } catch (err) {
     next(err);
   }

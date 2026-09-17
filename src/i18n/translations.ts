@@ -245,6 +245,14 @@ const translations = {
     confirm_reset: 'Confirmez-vous la réinitialisation de l\'application ? Vos données locales seront remises à zéro.',
     transfer_success_msg: 'Transfert effectué avec succès !',
     transfer_success_recent: 'Transfert Réussi',
+
+    // ─── Cookie consent ───
+    consent_title: 'Vos préférences de données',
+    consent_desc: 'MboaTalk stocke localement vos données de session et vos préférences pour vous offrir une expérience fluide. Nous n\'utilisons pas de cookies publicitaires ni de traqueurs.',
+    consent_accept: 'Accepter',
+    consent_refuse: 'Refuser',
+    consent_thanks: 'Merci pour votre retour !',
+    consent_continue: 'Redirection vers votre espace...',
   },
   en: {
     // ─── Auth ───
@@ -492,6 +500,14 @@ const translations = {
     confirm_reset: 'Are you sure you want to reset the app? All local data will be cleared.',
     transfer_success_msg: 'Transfer completed successfully!',
     transfer_success_recent: 'Transfer Successful',
+
+    // ─── Cookie consent ───
+    consent_title: 'Your data preferences',
+    consent_desc: 'MboaTalk stores your session data and preferences locally to give you a smooth experience. We do not use advertising cookies or trackers.',
+    consent_accept: 'Accept',
+    consent_refuse: 'Decline',
+    consent_thanks: 'Thank you for your feedback!',
+    consent_continue: 'Redirecting to your space...',
   }
 } as const;
 

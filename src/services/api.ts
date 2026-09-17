@@ -60,11 +60,15 @@ export const api = {
     });
   },
 
-  async createChat(data: { contactId?: string; groupId?: string }) {
-    return apiFetch<{ success: boolean; chat: Chat }>('/api/v1/chats/create', {
+  async createChat(data: { contactId?: string; groupId?: string; email?: string }) {
+    return apiFetch<{ success: boolean; chat: Chat; contact?: Contact }>('/api/v1/chats/create', {
       method: 'POST',
       body: data
     });
+  },
+
+  async startChatByEmail(email: string) {
+    return this.createChat({ email });
   },
 
   async deleteChat(chatId: string) {
@@ -132,6 +136,20 @@ export const api = {
     return apiFetch<{ success: boolean; channels: Channel[] }>(`/api/v1/channels/${id}/follow`, { method: 'POST' });
   },
 
+  async createChannel(data: { name: string; avatar?: string; category?: string; description?: string }) {
+    return apiFetch<{ success: boolean; channels: Channel[] }>('/api/v1/channels/create', {
+      method: 'POST',
+      body: data
+    });
+  },
+
+  async updateChannel(id: string, data: { name?: string; avatar?: string; category?: string; description?: string }) {
+    return apiFetch<{ success: boolean; channels: Channel[] }>(`/api/v1/channels/${id}/update`, {
+      method: 'POST',
+      body: data
+    });
+  },
+
   // Wallet
   async verifyWalletPin(pin: string) {
     return apiFetch('/api/v1/wallet/verify-pin', { method: 'POST', body: { pin } });
@@ -170,6 +188,14 @@ export const api = {
     });
   },
 
+  // Profile
+  async updateProfile(data: { pin?: string; email?: string; avatar?: string }) {
+    return apiFetch<{ success: boolean; user: UserProfile }>('/api/v1/profile/update', {
+      method: 'POST',
+      body: data
+    });
+  },
+
   // Settings & Notifications
   async markNotificationsRead() {
     return apiFetch<{ success: boolean; notifications: Notification[] }>('/api/v1/notifications/mark-read', {
@@ -181,13 +207,6 @@ export const api = {
     return apiFetch<{ success: boolean; notifications: Notification[] }>('/api/v1/notifications/clear', {
       method: 'POST',
       body: { id }
-    });
-  },
-
-  async updateProfile(data: { pin?: string; email?: string }) {
-    return apiFetch<{ success: boolean; user: UserProfile }>('/api/v1/profile/update', {
-      method: 'POST',
-      body: data
     });
   }
 };
